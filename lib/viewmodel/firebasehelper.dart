@@ -307,7 +307,8 @@ class FirebaseHelper with ChangeNotifier {
       //get sender ID
     });
   }
- Stream<QuerySnapshot> getMyPost() {
+
+  Stream<QuerySnapshot> getMyPost() {
     return db
         .collection("BusinesPost")
         .where("uid", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
@@ -335,7 +336,7 @@ class FirebaseHelper with ChangeNotifier {
   //   searchData = listOfUsersForChat;
   //   notifyListeners();
   // }
-//-------------search reseller 
+//-------------search reseller
   List<DocumentSnapshot<Map<String, dynamic>>> searchResult = [];
   Future searchResellerByName(
       bool isSearchingUserforBusiness, String key) async {
@@ -367,13 +368,12 @@ class FirebaseHelper with ChangeNotifier {
     log(searchResult.toString());
     log(listOfUsersForChat.toString());
 
-  if(listen){
-     notifyListeners();
-  }
+    if (listen) {
+      notifyListeners();
+    }
   }
 //------------search currentbusiness pst
 
- 
   List<BusinesPost> postList = [];
   getMyPostForSearch() async {
     final snapshot = await db
@@ -383,6 +383,7 @@ class FirebaseHelper with ChangeNotifier {
     postList =
         snapshot.docs.map((e) => BusinesPost.fromjsone(e.data())).toList();
   }
+
   List<BusinesPost> postSeachResult = [];
   searchMyPost(List<BusinesPost> list, String key) {
     postSeachResult = List.from(list);
@@ -394,13 +395,42 @@ class FirebaseHelper with ChangeNotifier {
     notifyListeners();
   }
 
+  ///----------------\
+  ///
+  ///
+  String locationForSearch = "kerala,india";
+
+  fetSearchValue(value) {
+    locationForSearch = value;
+    notifyListeners();
+  }
+
+  getAllPostForSearch() async {
+    final snapshot = await db
+        .collection("BusinesPost")
+        // .where("uid", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        .get();
+    postList =
+        snapshot.docs.map((e) => BusinesPost.fromjsone(e.data())).toList();
+  }
+
+  searchMyPostByLocation(List<BusinesPost> list, String key) {
+    postSeachResult = List.from(list);
+
+    postSeachResult = list
+        .where((element) =>
+            element.location.toLowerCase().contains(key.toLowerCase()))
+        .toList();
+    notifyListeners();
+  }
+
   //---------------searchBusiness
 
   //  List<BusinesRegistrationModel> businessList = [];
   // getBusinessForSearch() async {
   //   final snapshot = await db
   //       .collection("BusinessRegistration")
-       
+
   //       .get();
   //   businessList =
   //       snapshot.docs.map((e) => BusinesRegistrationModel.fromjsone(e.data())).toList();

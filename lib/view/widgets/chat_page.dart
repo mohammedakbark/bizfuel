@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:bizfuel/model/messagemodel.dart';
 import 'package:bizfuel/utils/string.dart';
 import 'package:bizfuel/view/chat.dart';
+import 'package:bizfuel/view/widgets/paymnet.dart';
 import 'package:bizfuel/viewmodel/firebasehelper.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -142,10 +143,7 @@ class _ChatPageState extends State<ChatPage> {
               IconButton(
                   onPressed: () {
                     showModalBottomSheet(
-                        context: context,
-                        builder: (context) => Container(
-                              color: Colors.white,
-                            ));
+                        context: context, builder: (context) => PaymentPage());
                   },
                   icon: const Icon(
                     Icons.monetization_on_outlined,

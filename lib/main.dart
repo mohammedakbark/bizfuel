@@ -3,6 +3,7 @@ import 'package:bizfuel/view/login/letsgo.dart';
 import 'package:bizfuel/view/modules/admin/loginpage.dart';
 import 'package:bizfuel/viewmodel/auth.dart';
 import 'package:bizfuel/viewmodel/firebasehelper.dart';
+import 'package:bizfuel/viewmodel/payment_controller.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +30,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (context) => FirebaseHelper(),
+        ),
+          ChangeNotifierProvider(
+          create: (context) => PaymentController(),
         ),
       ],
       child: const MaterialApp(
