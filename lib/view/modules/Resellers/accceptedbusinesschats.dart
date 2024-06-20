@@ -1,7 +1,7 @@
 import 'package:bizfuel/model/businessregistration.dart';
 import 'package:bizfuel/model/messagemodel.dart';
 import 'package:bizfuel/utils/string.dart';
-import 'package:bizfuel/view/widgets/chats.dart';
+import 'package:bizfuel/view/widgets/chat_page.dart';
 import 'package:bizfuel/viewmodel/firebasehelper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -98,7 +98,8 @@ class _AcceptBusinessChatsState extends State<AcceptBusinessChats> {
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                              builder: (context) => Chats(
+                                              builder: (context) => ChatPage(
+                                                contactNumber:  list[index].phonenumber,
                                                     isThisBusinessProfile: true,
                                                     anotherUserId:
                                                         list[index].id!,
@@ -134,7 +135,8 @@ class _AcceptBusinessChatsState extends State<AcceptBusinessChats> {
                                               itemBuilder: (context) => [
                                                 PopupMenuItem(
                                                   child: ListTile(
-                                                    leading: const Icon(Icons.delete),
+                                                    leading: const Icon(
+                                                        Icons.delete),
                                                     title: const Text('Delete'),
                                                     onTap: () {
                                                       // Handle delete action

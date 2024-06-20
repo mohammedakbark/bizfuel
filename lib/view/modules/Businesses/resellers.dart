@@ -1,6 +1,6 @@
 import 'package:bizfuel/model/userregitrationmodel.dart';
 import 'package:bizfuel/utils/string.dart';
-import 'package:bizfuel/view/widgets/chats.dart';
+import 'package:bizfuel/view/widgets/chat_page.dart';
 import 'package:bizfuel/view/modules/Businesses/sentrequest.dart';
 import 'package:bizfuel/view/modules/Resellers/resellerrequst.dart';
 import 'package:bizfuel/viewmodel/firebasehelper.dart';
@@ -50,17 +50,17 @@ class _SheffeqState extends State<Sheffeq> {
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
           ),
-          Padding(
-            padding: EdgeInsets.only(top: 30, left: 5, right: 5),
-            child: SizedBox(
-                height: 30,
-                child: SearchBar(
-                  hintText: "Find resellers",
-                  hintStyle: MaterialStatePropertyAll(
-                      TextStyle(color: Colors.black45, fontSize: 14)),
-                  leading: Icon(Icons.search),
-                )),
-          ),
+          // Padding(
+          //   padding: EdgeInsets.only(top: 30, left: 5, right: 5),
+          //   child: SizedBox(
+          //       height: 30,
+          //       child: SearchBar(
+          //         hintText: "Find resellers",
+          //         hintStyle: MaterialStatePropertyAll(
+          //             TextStyle(color: Colors.black45, fontSize: 14)),
+          //         leading: Icon(Icons.search),
+          //       )),
+          // ),
           TabBar(
               indicatorColor: Colors.black,
               dividerColor: Colors.black,
@@ -121,7 +121,9 @@ class _NewUsersState extends State<NewUsers> {
                       borderRadius: BorderRadius.circular(20)),
                   child: ListTile(
                     onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => Send_request(user: users[index],))),
+                        builder: (context) => Send_request(
+                              user: users[index],
+                            ))),
                     tileColor: Colors.white,
                     leading: CircleAvatar(
                       backgroundImage: NetworkImage(users[index].image),
@@ -188,7 +190,9 @@ class _ExistingUsersState extends State<ExistingUsers> {
                       borderRadius: BorderRadius.circular(20)),
                   child: ListTile(
                     onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => Send_request(user: users[index],))),
+                        builder: (context) => Send_request(
+                              user: users[index],
+                            ))),
                     tileColor: Colors.white,
                     leading: CircleAvatar(
                       backgroundImage: NetworkImage(users[index].image),

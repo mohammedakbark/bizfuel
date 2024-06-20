@@ -63,17 +63,17 @@ class _SheffeqState extends State<Sheffeq> {
                 ],
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.only(top: 30, left: 5, right: 5),
-              child: SizedBox(
-                  height: 40,
-                  child: SearchBar(
-                    hintText: "Find resellers",
-                    hintStyle: MaterialStatePropertyAll(
-                        TextStyle(color: Colors.black45, fontSize: 14)),
-                    leading: Icon(Icons.search),
-                  )),
-            ),
+            // const Padding(
+            //   padding: EdgeInsets.only(top: 30, left: 5, right: 5),
+            //   child: SizedBox(
+            //       height: 40,
+            //       child: SearchBar(
+            //         hintText: "Find resellers",
+            //         hintStyle: MaterialStatePropertyAll(
+            //             TextStyle(color: Colors.black45, fontSize: 14)),
+            //         leading: Icon(Icons.search),
+            //       )),
+            // ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(

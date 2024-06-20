@@ -6,10 +6,7 @@ import 'package:bizfuel/model/businessregistration.dart';
 import 'package:bizfuel/model/businesstypemodel.dart';
 import 'package:bizfuel/model/requestmodel.dart';
 import 'package:bizfuel/model/userregitrationmodel.dart';
-import 'package:bizfuel/resellerusers.dart';
 import 'package:bizfuel/utils/string.dart';
-import 'package:bizfuel/view/login/login.dart';
-import 'package:bizfuel/view/modules/Resellers/resellerprofile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -279,8 +276,11 @@ class FirebaseHelper with ChangeNotifier {
   List<DocumentSnapshot<Map<String, dynamic>>> listOfUsersForChat = [];
   getChatpossibleUsers(String collection) async {
     log("message");
-    listOfUsersForChat = [];
     await getCurrentUserAcceptedRequest().then((value) async {
+      listOfUsersForChat = [];
+      // searchResult = [];
+      // notifyListeners();
+
       if (collection == "BusinessRegistration") {
         //user module
         for (var i in value) {
@@ -307,10 +307,15 @@ class FirebaseHelper with ChangeNotifier {
       //get sender ID
     });
   }
-
-  Future<QuerySnapshot<Map<String, dynamic>>> chatroom() async {
-    return  db.collection("chat_room").get();
+ Stream<QuerySnapshot> getMyPost() {
+    return db
+        .collection("BusinesPost")
+        .where("uid", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        .snapshots();
   }
+  // Future<QuerySnapshot<Map<String, dynamic>>> chatroom() async {
+  //   return  db.collection("chat_room").get();
+  // }
 
   //  getlatestChatForBusiness() {
   //   chatroom().then((value) {
@@ -318,5 +323,97 @@ class FirebaseHelper with ChangeNotifier {
 
   //   }
   //   });
+  // }
+  //=============================//===================================//
+  //==================================================================//
+  //=============================//===================================//
+  //------------------RESELLER----------------
+
+  //------------------BUSINESS--------------
+  // List<DocumentSnapshot<Map<String, dynamic>>> searchData = [];
+  // getDataForSearch() async {
+  //   searchData = listOfUsersForChat;
+  //   notifyListeners();
+  // }
+//-------------search reseller 
+  List<DocumentSnapshot<Map<String, dynamic>>> searchResult = [];
+  Future searchResellerByName(
+      bool isSearchingUserforBusiness, String key) async {
+    searchResult = [];
+    searchResult = List.from(listOfUsersForChat);
+    notifyListeners();
+    if (isSearchingUserforBusiness == true) {
+      searchResult = listOfUsersForChat
+          .where((element) => element["name"]
+              .toString()
+              .toLowerCase()
+              .contains(key.toLowerCase()))
+          .toList();
+    } else {
+      searchResult = listOfUsersForChat
+          .where((element) => element["businesname"]
+              .toString()
+              .toLowerCase()
+              .contains(key.toLowerCase()))
+          .toList();
+    }
+
+    notifyListeners();
+  }
+
+  clearSearchList(bool listen) async {
+    searchResult = [];
+    listOfUsersForChat = [];
+    log(searchResult.toString());
+    log(listOfUsersForChat.toString());
+
+  if(listen){
+     notifyListeners();
+  }
+  }
+//------------search currentbusiness pst
+
+ 
+  List<BusinesPost> postList = [];
+  getMyPostForSearch() async {
+    final snapshot = await db
+        .collection("BusinesPost")
+        .where("uid", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        .get();
+    postList =
+        snapshot.docs.map((e) => BusinesPost.fromjsone(e.data())).toList();
+  }
+  List<BusinesPost> postSeachResult = [];
+  searchMyPost(List<BusinesPost> list, String key) {
+    postSeachResult = List.from(list);
+
+    postSeachResult = list
+        .where(
+            (element) => element.type.toLowerCase().contains(key.toLowerCase()))
+        .toList();
+    notifyListeners();
+  }
+
+  //---------------searchBusiness
+
+  //  List<BusinesRegistrationModel> businessList = [];
+  // getBusinessForSearch() async {
+  //   final snapshot = await db
+  //       .collection("BusinessRegistration")
+       
+  //       .get();
+  //   businessList =
+  //       snapshot.docs.map((e) => BusinesRegistrationModel.fromjsone(e.data())).toList();
+  // }
+
+  //  List<BusinesRegistrationModel> businessSearchResult = [];
+  // searchABusiness(List<BusinesRegistrationModel> list, String key) {
+  //   postSeachResult = List.from(list);
+
+  //   businessSearchResult = list
+  //       .where(
+  //           (element) => element.businessName.toLowerCase().contains(key.toLowerCase()))
+  //       .toList();
+  //   notifyListeners();
   // }
 }

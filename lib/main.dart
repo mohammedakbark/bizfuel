@@ -1,9 +1,10 @@
-
 import 'package:bizfuel/firebase_options.dart';
 import 'package:bizfuel/view/login/letsgo.dart';
+import 'package:bizfuel/view/modules/admin/loginpage.dart';
 import 'package:bizfuel/viewmodel/auth.dart';
 import 'package:bizfuel/viewmodel/firebasehelper.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -31,10 +32,9 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: const MaterialApp(
-        debugShowCheckedModeBanner: false,
-        // home: Letsgo(),
-        home: Letsgo(),
-      ),
+          debugShowCheckedModeBanner: false,
+          // home: Letsgo(),
+          home:  Letsgo()),
     );
   }
 }

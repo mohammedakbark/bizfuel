@@ -57,7 +57,7 @@ class _ResellerhomepageState extends State<Resellerhomepage> {
               ],
             ),
             SearchBar(
-              hintText: "Find Businesses or Resellers",
+              hintText: "Find Businesses",
               hintStyle: const MaterialStatePropertyAll(
                   TextStyle(color: Colors.black45)),
               leading: IconButton(
@@ -172,6 +172,9 @@ class _ResellerhomepageState extends State<Resellerhomepage> {
                             e.data() as Map<String, dynamic>);
                       }).toList();
 
+                      if (!snapshot.hasData) {
+                        return Text("No Data");
+                      }
                       return GridView.builder(
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(

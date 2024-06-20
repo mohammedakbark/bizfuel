@@ -1,32 +1,39 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:bizfuel/model/messagemodel.dart';
+import 'package:bizfuel/utils/string.dart';
 import 'package:bizfuel/view/chat.dart';
 import 'package:bizfuel/viewmodel/firebasehelper.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-class Chats extends StatefulWidget {
+class ChatPage extends StatefulWidget {
   bool isThisBusinessProfile;
   String anotherUserId;
   String anotherUsername;
   String anotherUserProfile;
+  String contactNumber;
 
-  Chats(
+  ChatPage(
       {super.key,
+      required this.contactNumber,
       required this.isThisBusinessProfile,
       required this.anotherUserId,
       required this.anotherUserProfile,
       required this.anotherUsername});
 
   @override
-  State<Chats> createState() => _ChatsState();
+  State<ChatPage> createState() => _ChatPageState();
 }
 
-class _ChatsState extends State<Chats> {
+class _ChatPageState extends State<ChatPage> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -61,6 +68,7 @@ class _ChatsState extends State<Chats> {
               const Divider(
                 color: Colors.black,
               ),
+              isImageIsLoading ? Helper.showIndicator() : SizedBox(),
               Expanded(
                   child: StreamBuilder<QuerySnapshot>(
                       stream: CommunicationController().getMessage(
@@ -88,7 +96,7 @@ class _ChatsState extends State<Chats> {
                               return message(listOfMessages[index]);
                               // return message(messageModel)
                             });
-                      }))
+                      })),
             ],
           ),
         ),
@@ -113,7 +121,9 @@ class _ChatsState extends State<Chats> {
                     suffixIcon: IconButton(
                         onPressed: () {
                           CommunicationController().sendmessage(
-                              widget.anotherUserId, meesaagecontroller.text);
+                              widget.anotherUserId,
+                              meesaagecontroller.text,
+                              "Text");
                           meesaagecontroller.clear();
                         },
                         icon: const Icon(
@@ -130,13 +140,29 @@ class _ChatsState extends State<Chats> {
                 ),
               ),
               IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    showModalBottomSheet(
+                        context: context,
+                        builder: (context) => Container(
+                              color: Colors.white,
+                            ));
+                  },
                   icon: const Icon(
                     Icons.monetization_on_outlined,
                     color: Colors.black,
                   )),
               IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    openCamera().then((value) {
+                      if (value != "") {
+                        CommunicationController()
+                            .sendmessage(widget.anotherUserId, value, "Image");
+                        setState(() {
+                          isImageIsLoading = false;
+                        });
+                      }
+                    });
+                  },
                   icon: const Icon(
                     Icons.camera_alt_outlined,
                     color: Colors.black,
@@ -160,13 +186,28 @@ class _ChatsState extends State<Chats> {
     bool isMe = messageModel.senderID == FirebaseAuth.instance.currentUser!.uid;
     return Align(
       alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
-      child: Container(
-        margin: const EdgeInsets.all(8.0),
-        padding: const EdgeInsets.all(8.0),
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15.0), color: Colors.white),
-        child: Text(messageModel.message),
-      ),
+      child: messageModel.messageType == "Image"
+          ? Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                height: 250,
+                width: 200,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: Color.fromARGB(255, 146, 193, 202),
+                    image: DecorationImage(
+                        fit: BoxFit.cover,
+                        image: NetworkImage(messageModel.message))),
+              ),
+            )
+          : Container(
+              margin: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(8.0),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15.0),
+                  color: Colors.white),
+              child: Text(messageModel.message),
+            ),
     );
   }
 
@@ -201,19 +242,52 @@ class _ChatsState extends State<Chats> {
           ],
         ),
         const Spacer(),
+        // IconButton(
+        //     onPressed: () {},
+        //     icon: const Icon(
+        //       Icons.camera_alt,
+        //       color: Colors.black,
+        //     )),
         IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.camera_alt,
-              color: Colors.black,
-            )),
-        IconButton(
-            onPressed: () {},
+            onPressed: () async {
+              final Uri launchUri = Uri(
+                scheme: 'tel',
+                path: widget.contactNumber,
+              );
+              await launchUrl(launchUri);
+            },
             icon: const Icon(
               Icons.call,
               color: Colors.black,
             ))
       ],
     );
+  }
+
+  File? image;
+  bool isImageIsLoading = false;
+  Future<String> openCamera() async {
+    final chatRoomId = [
+      FirebaseAuth.instance.currentUser!.uid,
+      widget.anotherUserId
+    ];
+    chatRoomId.sort();
+    final ids = chatRoomId.join('_');
+    final Timestamp time = Timestamp.now();
+    final storage = FirebaseStorage.instance;
+    ImagePicker picker = ImagePicker();
+    final pickeedFile = await picker.pickImage(source: ImageSource.camera);
+    if (pickeedFile == null) return "";
+
+    image = File(pickeedFile.path);
+    isImageIsLoading = true;
+    setState(() {});
+    SettableMetadata metadata = SettableMetadata(contentType: "image/jpeg");
+
+    UploadTask uploadTask =
+        storage.ref().child('$ids/$time').putFile(image!, metadata);
+
+    TaskSnapshot snapshot = await uploadTask;
+    return await snapshot.ref.getDownloadURL();
   }
 }

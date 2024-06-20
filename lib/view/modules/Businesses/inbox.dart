@@ -1,7 +1,8 @@
 import 'dart:developer';
 
 import 'package:bizfuel/model/userregitrationmodel.dart';
-import 'package:bizfuel/view/widgets/chats.dart';
+import 'package:bizfuel/utils/string.dart';
+import 'package:bizfuel/view/widgets/chat_page.dart';
 import 'package:bizfuel/viewmodel/firebasehelper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -45,53 +46,81 @@ class _SheffeqState extends State<Sheffeq> {
               image: AssetImage("images/background.jpg"), fit: BoxFit.cover),
         ),
         child: SingleChildScrollView(
-          child: Consumer<FirebaseHelper>(builder: (context, helper, child) {
-            return Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      IconButton(
-                          onPressed: () {
-                            //Navigator.pop(context);
-                          },
-                          icon: const Icon(Icons.arrow_back)),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width / 3,
-                      ),
-                      const Text(
-                        "Inbox",
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.only(top: 30, left: 5, right: 5),
-                    child: SizedBox(
-                        height: 40,
-                        child: SearchBar(
-                          hintText: "Find resellers",
-                          hintStyle: MaterialStatePropertyAll(
-                              TextStyle(color: Colors.black45, fontSize: 14)),
-                          leading: Icon(Icons.search),
-                        )),
-                  ),
-                  Padding(
+            child: Consumer<FirebaseHelper>(builder: (context, helper, child) {
+          helper.clearSearchList(false);
+
+          return Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    IconButton(
+                        onPressed: () {
+                          //Navigator.pop(context);
+                        },
+                        icon: const Icon(Icons.arrow_back)),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width / 3,
+                    ),
+                    const Text(
+                      "Inbox",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 30, left: 5, right: 5),
+                  child: SizedBox(
+                      height: 40,
+                      child: SearchBar(
+                        onTap: () {
+                          // helper.getDataForSearch();
+                          // helper.getChatpossibleUsers("Usergegitration");
+                        },
+                        onChanged: (value) async {
+                          if (value.isEmpty) {
+                            log("called");
+                            await helper.clearSearchList(true);
+                          } else {
+                            await helper.searchResellerByName(true, value);
+                          }
+                        },
+                        hintText: "Find resellers",
+                        hintStyle: const MaterialStatePropertyAll(
+                            TextStyle(color: Colors.black45, fontSize: 14)),
+                        leading: const Icon(Icons.search),
+                      )),
+                ),
+                Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: FutureBuilder(
                         future: helper.getChatpossibleUsers("Usergegitration"),
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
-                            return const Center(
-                              child: CircularProgressIndicator(),
-                            );
+                            return Helper.showIndicator();
                           }
-                          List<UserRegModel> list = helper.listOfUsersForChat
-                              .map((e) => UserRegModel.fromjsone(
-                                  e.data() as Map<String, dynamic>))
-                              .toList();
+
+                          List<UserRegModel> list = [];
+                          list.clear();
+
+                          if (helper.searchResult.isNotEmpty) {
+                            list = [];
+                            // setState(() {});
+                            list = helper.searchResult
+                                .map((e) => UserRegModel.fromjsone(
+                                    e.data() as Map<String, dynamic>))
+                                .toList();
+                          } else {
+                            list = [];
+                            // setState(() {}); //
+                            list = helper.listOfUsersForChat
+                                .map((e) => UserRegModel.fromjsone(
+                                    e.data() as Map<String, dynamic>))
+                                .toList();
+                          }
+
                           return list.isEmpty
                               ? const Center(
                                   child: Text("No User Found"),
@@ -109,7 +138,8 @@ class _SheffeqState extends State<Sheffeq> {
                                       child: ListTile(
                                         onTap: () => Navigator.of(context)
                                             .push(MaterialPageRoute(
-                                                builder: (context) => Chats(
+                                                builder: (context) => ChatPage(
+                                                  contactNumber:  list[index].contactNumber,
                                                       anotherUserId:
                                                           list[index].id!,
                                                       anotherUserProfile:
@@ -141,11 +171,9 @@ class _SheffeqState extends State<Sheffeq> {
                                     );
                                   },
                                   itemCount: list.length);
-                        }),
-                  )
-                ]);
-          }),
-        ),
+                        }))
+              ]);
+        })),
       )),
     );
   }

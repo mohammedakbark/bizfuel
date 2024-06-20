@@ -3,13 +3,15 @@ import 'package:bizfuel/utils/string.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CommunicationController {
-  sendmessage(reciveid, String message) async {
+  sendmessage(reciveid, String message,String messageType) async {
     final senderEmailid = auth.currentUser!.email;
     final String curentuserid = auth.currentUser!.uid;
 
     final Timestamp timestamp = Timestamp.now();
 
     MessageModel messageModel = MessageModel(
+      messageType: messageType,
+
       senderID: curentuserid,
       senderEmail: senderEmailid.toString(),
       reciverID: reciveid,

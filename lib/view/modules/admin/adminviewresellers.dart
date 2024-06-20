@@ -1,3 +1,4 @@
+import 'package:bizfuel/view/widgets/snackbars.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -15,7 +16,8 @@ class _AdminViewResellersState extends State<AdminViewResellers> {
   void initState() {
     super.initState();
     // Initialize the stream to display all resellers initially
-    _sellerStream = FirebaseFirestore.instance.collection('resellers').snapshots();
+    _sellerStream =
+        FirebaseFirestore.instance.collection('Usergegitration').snapshots();
   }
 
   @override
@@ -33,7 +35,8 @@ class _AdminViewResellersState extends State<AdminViewResellers> {
             children: [
               Container(
                 color: Colors.transparent,
-                padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
+                padding: const EdgeInsets.symmetric(
+                    vertical: 16.0, horizontal: 24.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -106,17 +109,21 @@ class _AdminViewResellersState extends State<AdminViewResellers> {
                                   padding: const EdgeInsets.only(left: 20),
                                   child: CircleAvatar(
                                     radius: 30,
-                                    // backgroundImage: NetworkImage(reseller['img'] ?? ''),
+                                    backgroundImage:
+                                        NetworkImage(reseller['image'] ?? ''),
                                   ),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.only(top: 17.0, left: 10),
+                                  padding: const EdgeInsets.only(
+                                      top: 17.0, left: 10),
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(reseller['name'] ?? 'No name'),
                                       Text(reseller['email'] ?? 'No type'),
-                                      Text(reseller['phone '] ?? 'No room'),
+                                      // Text(reseller['qualification '] ??
+                                      //     'No room'),
                                     ],
                                   ),
                                 ),
@@ -128,7 +135,8 @@ class _AdminViewResellersState extends State<AdminViewResellers> {
                                     height: 40,
                                     child: ElevatedButton(
                                       style: ElevatedButton.styleFrom(
-                                        backgroundColor: Color.fromARGB(255, 217, 32, 32),
+                                        backgroundColor:
+                                            Color.fromARGB(255, 217, 32, 32),
                                         foregroundColor: Colors.black,
                                         shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.zero,
@@ -154,18 +162,18 @@ class _AdminViewResellersState extends State<AdminViewResellers> {
           ),
         ],
       ),
-    ); 
+    );
   }
 
   void _removeReseller(String id) {
-    FirebaseFirestore.instance.collection('resellers').doc(id).delete().then((_) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Reseller removed successfully')),
-      );
+    FirebaseFirestore.instance
+        .collection('Usergegitration')
+        .doc(id)
+        .delete()
+        .then((_) {
+      CSnackbar.showErrorToast(context, "Reseller removed successfully");
     }).catchError((error) {
-      ScaffoldMessenger.of(context).showSnackBar( 
-        SnackBar(content: Text('Failed to remove reseller: $error')),
-      );
+      CSnackbar.showErrorToast(context, "Failed to remove reseller: $error");
     });
   }
 }

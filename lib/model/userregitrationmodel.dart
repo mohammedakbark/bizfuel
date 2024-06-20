@@ -6,11 +6,13 @@ class UserRegModel {
   String qualification;
   String? id;
   String type;
+  String contactNumber;
 
   String uid;
   String joinDate;
 
   UserRegModel({
+    required this.contactNumber,
     required this.email,
     required this.name,
     required this.image,
@@ -23,6 +25,7 @@ class UserRegModel {
 
   Map<String, dynamic> toJsone(idd) => {
         'email': email,
+        "contactNumber": contactNumber,
         'name': name,
         'image': image,
         'joinDate': joinDate,
@@ -34,6 +37,7 @@ class UserRegModel {
 
   factory UserRegModel.fromjsone(Map<String, dynamic> jsone) {
     return UserRegModel(
+      contactNumber: jsone["contactNumber"],
       joinDate: jsone["joinDate"],
       email: jsone['email'],
       name: jsone['name'],

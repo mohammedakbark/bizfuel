@@ -130,7 +130,23 @@ class _ResellregistrationState extends State<Resellregistration> {
                                   controller: emailController,
                                   decoration: const InputDecoration(
                                     filled: true,
-                                    hintText: "E-mail or Phone Number",
+                                    hintText: "E-mail",
+                                    fillColor: Colors.white,
+                                    border: OutlineInputBorder(),
+                                  ),
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return 'Please enter your email or phone number';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                const SizedBox(height: 15),
+                                TextFormField(
+                                  controller: phoneController,
+                                  decoration: const InputDecoration(
+                                    filled: true,
+                                    hintText: "Contact Number",
                                     fillColor: Colors.white,
                                     border: OutlineInputBorder(),
                                   ),

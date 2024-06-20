@@ -1,5 +1,5 @@
 import 'package:bizfuel/model/userregitrationmodel.dart';
-import 'package:bizfuel/view/widgets/chats.dart';
+import 'package:bizfuel/view/widgets/chat_page.dart';
 import 'package:flutter/material.dart';
 
 class ViewReseller extends StatefulWidget {
@@ -108,24 +108,24 @@ class _ViewResellerState extends State<ViewReseller> {
               const SizedBox(
                 height: 40,
               ),
-              ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.teal,
-                      foregroundColor: Colors.black,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(0))),
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => Chats(
-                                  anotherUserId: widget.model.id!,
-                                  anotherUserProfile: widget.model!.image,
-                                  anotherUsername: widget.model.name,
-                                  isThisBusinessProfile: false,
-                                )));
-                  },
-                  child: const Text("Chat"))
+              // ElevatedButton(
+              //     style: ElevatedButton.styleFrom(
+              //         backgroundColor: Colors.teal,
+              //         foregroundColor: Colors.black,
+              //         shape: RoundedRectangleBorder(
+              //             borderRadius: BorderRadius.circular(0))),
+              //     onPressed: () {
+              //       Navigator.push(
+              //           context,
+              //           MaterialPageRoute(
+              //               builder: (context) => Chats(
+              //                     anotherUserId: widget.model.id!,
+              //                     anotherUserProfile: widget.model!.image,
+              //                     anotherUsername: widget.model.name,
+              //                     isThisBusinessProfile: false,
+              //                   )));
+              //     },
+              //     child: const Text("Chat"))
             ],
           ),
         ),

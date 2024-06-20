@@ -4,6 +4,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+
+var ADMINUID = "X1jnERkR2oWUGqwlzAiRSL7xxzH2";
+var ADMINEMAIL = "admin@gmail.com";
+var ADMINPASSWORD = "admin@123";
+
+
+// <script type="text/javascript">
+//     window.flutterWebRenderer = "html";
+// </script>
+
 final db = FirebaseFirestore.instance;
 
 final auth = FirebaseAuth.instance;
@@ -15,6 +25,7 @@ succestoast(BuildContext context, msg) {
   CherryToast.success(title: Text(msg, style: TextStyle(color: Colors.black)))
       .show(context);
 }
+
 
 infotoast(BuildContext context, msg) {
   CherryToast.info(
@@ -36,12 +47,10 @@ class Helper {
 
   static double getScreenRatio(BuildContext context) {
     return W(context) / H(context);
-
-   
   }
 
- static Widget showIndicator(){
-    return  const Center(
+  static Widget showIndicator() {
+    return const Center(
         child: CircularProgressIndicator(
       color: Colors.blueAccent,
       backgroundColor: Colors.white,

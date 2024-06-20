@@ -62,15 +62,15 @@ class _BizhomepgeState extends State<Bizhomepge> {
                     // ),
                   ],
                 ),
-                SearchBar(
-                  hintText: "Find Businesses or Resellers",
-                  hintStyle: const MaterialStatePropertyAll(
-                      TextStyle(color: Colors.black45)),
-                  leading: IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.search_outlined),
-                  ),
-                ),
+                // SearchBar(
+                //   hintText: "Find Businesses or Resellers",
+                //   hintStyle: const MaterialStatePropertyAll(
+                //       TextStyle(color: Colors.black45)),
+                //   leading: IconButton(
+                //     onPressed: () {},
+                //     icon: const Icon(Icons.search_outlined),
+                //   ),
+                // ),
                 const SizedBox(height: 10),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),

@@ -117,6 +117,7 @@ class AuthControoler with ChangeNotifier {
 
   Future userRegitration(
     email,
+    
     password,
     context,
     img,
@@ -136,6 +137,7 @@ class AuthControoler with ChangeNotifier {
         (value) {
           authprvdr.addsellerRegister(
               UserRegModel(
+                contactNumber:phonenumber ,
                 joinDate: date,
                 email: email,
                 name: name,

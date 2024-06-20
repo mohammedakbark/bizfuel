@@ -1,3 +1,4 @@
+import 'package:bizfuel/view/widgets/snackbars.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -15,7 +16,9 @@ class _AdminViewBuzState extends State<AdminViewBuz> {
   void initState() {
     super.initState();
     // Initialize the stream to display all businesses initially
-    _businessStream = FirebaseFirestore.instance.collection('business').snapshots();
+    _businessStream = FirebaseFirestore.instance
+        .collection('BusinessRegistration')
+        .snapshots();
   }
 
   @override
@@ -33,7 +36,8 @@ class _AdminViewBuzState extends State<AdminViewBuz> {
             children: [
               Container(
                 color: Colors.transparent,
-                padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
+                padding: const EdgeInsets.symmetric(
+                    vertical: 16.0, horizontal: 24.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -41,7 +45,7 @@ class _AdminViewBuzState extends State<AdminViewBuz> {
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                      child: Text(
+                      child: const Text(
                         "Home",
                         style: TextStyle(
                           fontSize: 20,
@@ -86,7 +90,7 @@ class _AdminViewBuzState extends State<AdminViewBuz> {
                       return Center(child: Text('Error: ${snapshot.error}'));
                     }
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(child: CircularProgressIndicator());
+                      return const Center(child: CircularProgressIndicator());
                     }
 
                     final data = snapshot.requireData;
@@ -106,21 +110,25 @@ class _AdminViewBuzState extends State<AdminViewBuz> {
                                   padding: const EdgeInsets.only(left: 20),
                                   child: CircleAvatar(
                                     radius: 30,
-                                    // backgroundImage: NetworkImage(business['img'] ?? ''),
+                                    backgroundImage:
+                                        NetworkImage(business['image'] ?? ''),
                                   ),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.only(top: 17.0, left: 10),
+                                  padding: const EdgeInsets.only(
+                                      top: 17.0, left: 10),
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      Text(business['name'] ?? 'No name'),
+                                      Text(
+                                          business['businesname'] ?? 'No name'),
                                       Text(business["email"] ?? 'No type'),
-                                      Text(business["phone"] ?? 'No room')
+                                      Text(business["phonenumber"] ?? 'No room')
                                     ],
                                   ),
                                 ),
-                                Spacer(),
+                                const Spacer(),
                                 Padding(
                                   padding: const EdgeInsets.only(right: 20),
                                   child: SizedBox(
@@ -128,16 +136,17 @@ class _AdminViewBuzState extends State<AdminViewBuz> {
                                     height: 40,
                                     child: ElevatedButton(
                                       style: ElevatedButton.styleFrom(
-                                        backgroundColor: Color.fromARGB(255, 217, 32, 32),
+                                        backgroundColor: const Color.fromARGB(
+                                            255, 217, 32, 32),
                                         foregroundColor: Colors.black,
-                                        shape: RoundedRectangleBorder(
+                                        shape: const RoundedRectangleBorder(
                                           borderRadius: BorderRadius.zero,
                                         ),
                                       ),
                                       onPressed: () {
                                         _removeBusiness(business.id);
                                       },
-                                      child: Text("Remove"),
+                                      child: const Text("Remove"),
                                     ),
                                   ),
                                 ),
@@ -158,14 +167,14 @@ class _AdminViewBuzState extends State<AdminViewBuz> {
   }
 
   void _removeBusiness(String id) {
-    FirebaseFirestore.instance.collection('business').doc(id).delete().then((_) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Business removed successfully')),
-      );
+    FirebaseFirestore.instance
+        .collection('BusinessRegistration')
+        .doc(id)
+        .delete()
+        .then((_) {
+      CSnackbar.showErrorToast(context, "Business removed successfully");
     }).catchError((error) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to remove business: $error')),
-      );
+      CSnackbar.showErrorToast(context, "Failed to remove business: $error");
     });
   }
 }

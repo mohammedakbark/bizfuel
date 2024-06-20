@@ -1,6 +1,11 @@
+import 'package:bizfuel/model/businesstypemodel.dart';
+import 'package:bizfuel/utils/string.dart';
 import 'package:bizfuel/view/modules/Businesses/myads2.dart';
+import 'package:bizfuel/viewmodel/firebasehelper.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
 
 class Myads1 extends StatefulWidget {
   const Myads1({super.key});
@@ -10,26 +15,6 @@ class Myads1 extends StatefulWidget {
 }
 
 class _Myads1State extends State<Myads1> {
-  List<Map<String, String>> data = [
-    {
-      "name": "Elegent Watches",
-      "location": "Manjari,Kerala",
-      "img":
-          "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ6iUVzhZCoi1gffBwqglkcayiWsNQDl-Ld3PZIDZGhEqqdljJeo4ocVt8dJGgEnkRIIa4&usqp=CAU"
-    },
-    {
-      "name": "Raman",
-      "location": "Kochi,Kerala",
-      "img":
-          "https://wallpapers.com/images/featured/cool-profile-picture-87h46gcobjl5e4xu.jpg"
-    },
-    {
-      "name": "Stepn",
-      "location": "Visitor",
-      "img":
-          "https://images.sftcdn.net/images/t_app-cover-l,f_auto/p/e76d4296-43f3-493b-9d50-f8e5c142d06c/2117667014/boys-profile-picture-screenshot.png"
-    },
-  ];
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -41,97 +26,134 @@ class _Myads1State extends State<Myads1> {
           image: DecorationImage(
               image: AssetImage('images/background.jpg'), fit: BoxFit.cover),
         ),
-        child: Column(
-          children: [
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  Icon(Icons.arrow_back),
-                  SizedBox(
-                    width: 120,
-                  ),
-                  Text(
-                    'My Adds',
-                    style: TextStyle(fontSize: 18),
-                  ),
-                ],
+        child: Consumer<FirebaseHelper>(builder: (context, searcher, child) {
+          return Column(
+            children: [
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    Icon(Icons.arrow_back),
+                    SizedBox(
+                      width: 120,
+                    ),
+                    Text(
+                      'My Adds',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            const Divider(
-              color: Colors.black,
-            ),
-            const Padding(
-              padding: EdgeInsets.only(top: 30, left: 5, right: 5),
-              child: SizedBox(
-                  height: 30,
-                  child: SearchBar(
-                    hintText: "Products",
-                    hintStyle: MaterialStatePropertyAll(
-                        TextStyle(color: Colors.black45, fontSize: 14)),
-                    leading: Icon(Icons.search),
-                  )),
-            ),
-            const SizedBox(
-              height: 35,
-            ),
-            Expanded(
-              child: Center(
-                child: ListView.builder(
-                    itemCount: data.length,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        child: InkWell(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Myads2()));
-                          },
-                          child: Card(
-                            child: Container(
-                              width: double.infinity,
-                              height: 100,
-                              child: Row(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.only(left: 20),
-                                    child: CircleAvatar(
-                                      radius: 30,
-                                      backgroundImage:
-                                          NetworkImage(data[index]['img']!),
-                                    ),
-                                    // child: Container(
-                                    //   width: 60,
-                                    //   height: 60,
-                                    //   decoration: BoxDecoration(
-                                    //       image: DecorationImage(
-                                    //           image: NetworkImage(
-                                    //               data[index]['img']!))),
-                                    // ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 17.0, left: 10),
-                                    child: Column(
-                                      children: [
-                                        Text(data[index]['name']!),
-                                        Text(data[index]['location']!),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      );
-                    }),
+              const Divider(
+                color: Colors.black,
               ),
-            ),
-          ],
-        ),
+              Padding(
+                padding: EdgeInsets.only(top: 30, left: 5, right: 5),
+                child: SizedBox(
+                    height: 30,
+                    child: SearchBar(
+                      onTap: () {
+                        searcher.getMyPostForSearch();
+                      },
+                      onChanged: (value) {
+                        searcher.searchMyPost(searcher.postList, value);
+                      },
+                      hintText: "Products",
+                      hintStyle: MaterialStatePropertyAll(
+                          TextStyle(color: Colors.black45, fontSize: 14)),
+                      leading: Icon(Icons.search),
+                    )),
+              ),
+              const SizedBox(
+                height: 35,
+              ),
+              StreamBuilder<QuerySnapshot>(
+                  stream: FirebaseHelper().getMyPost(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Helper.showIndicator();
+                    }
+                    if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                      return Center(child: Text("No Post"));
+                    }
+                    List<BusinesPost> listOfMyPost = [];
+                    if (searcher.postList.isNotEmpty) {
+                      listOfMyPost = searcher.postSeachResult;
+                    } else {
+                      listOfMyPost = snapshot.data!.docs
+                          .map((e) => BusinesPost.fromjsone(
+                              e.data() as Map<String, dynamic>))
+                          .toList();
+                    }
+
+                    return Expanded(
+                      child: Center(
+                        child: listOfMyPost.isEmpty
+                            ? Text("No Post Found")
+                            : ListView.builder(
+                                itemCount: listOfMyPost.length,
+                                itemBuilder: (context, index) {
+                                  return Padding(
+                                    padding:
+                                        const EdgeInsets.symmetric(vertical: 8),
+                                    child: InkWell(
+                                      onTap: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => Myads2(
+                                                      post: listOfMyPost[index],
+                                                    )));
+                                      },
+                                      child: Card(
+                                        child: Container(
+                                          width: double.infinity,
+                                          height: 100,
+                                          child: Row(
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 20),
+                                                child: CircleAvatar(
+                                                  radius: 30,
+                                                  backgroundImage: NetworkImage(
+                                                      listOfMyPost[index]
+                                                          .images[0]),
+                                                ),
+                                                // child: Container(
+                                                //   width: 60,
+                                                //   height: 60,
+                                                //   decoration: BoxDecoration(
+                                                //       image: DecorationImage(
+                                                //           image: NetworkImage(
+                                                //               data[index]['img']!))),
+                                                // ),
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    top: 17.0, left: 10),
+                                                child: Column(
+                                                  children: [
+                                                    Text(listOfMyPost[index]
+                                                        .type),
+                                                    Text(listOfMyPost[index]
+                                                        .location),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                }),
+                      ),
+                    );
+                  }),
+            ],
+          );
+        }),
       )),
     );
   }

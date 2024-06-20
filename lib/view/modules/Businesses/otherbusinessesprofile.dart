@@ -1,6 +1,6 @@
 import 'package:bizfuel/model/businessregistration.dart';
 import 'package:bizfuel/view/widgets/boxtile.dart';
-import 'package:bizfuel/view/widgets/chats.dart';
+import 'package:bizfuel/view/widgets/chat_page.dart';
 import 'package:flutter/material.dart';
 
 class OtherBusinessProfile extends StatefulWidget {

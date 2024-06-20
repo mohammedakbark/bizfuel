@@ -32,6 +32,7 @@ class _AccountState extends State<Account> {
           ),
           child: Consumer<FirebaseHelper>(
             builder: (context, helper, child) {
+             
               return FutureBuilder(
                 future: helper.getSelectedBusinesprofile(auth.currentUser!.uid),
                 builder: (context, snapshot) {
@@ -59,18 +60,13 @@ class _AccountState extends State<Account> {
                               const SizedBox(
                                 width: 50,
                               ),
+                              // TextButton(
+                              //     onPressed: () {}, child: const Text("Edit")),
                               TextButton(
-                                  onPressed: () {}, child: const Text("Edit")),
-                              Consumer<FirebaseHelper>(
-                                builder: (context, helper, child) {
-                                  return TextButton(
-                                      onPressed: () async {
-                                        LoginPreference.clearPreference(
-                                            context);
-                                      },
-                                      child: const Icon(Icons.logout));
-                                },
-                              )
+                                  onPressed: () async {
+                                    LoginPreference.clearPreference(context);
+                                  },
+                                  child: const Icon(Icons.logout))
                             ],
                           ),
                         ),

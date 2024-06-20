@@ -6,8 +6,10 @@ class MessageModel {
   String reciverID;
   String message;
   Timestamp timestamp;
+  String messageType;
 
   MessageModel({
+    required this.messageType,
     required this.senderID,
     required this.senderEmail,
     required this.reciverID,
@@ -16,6 +18,7 @@ class MessageModel {
   });
 
   Map<String, dynamic> tojsone() => {
+    'messageType':messageType,
         'senderid': senderID,
         'senderemail': senderEmail,
         'message': message,
@@ -25,6 +28,7 @@ class MessageModel {
 
   factory MessageModel.fromjsone(Map<String, dynamic> jsone) {
     return MessageModel(
+      messageType:jsone['messageType'],
       senderID: jsone['senderid'],
       senderEmail: jsone['senderemail'],
       reciverID: jsone['reciverid'],

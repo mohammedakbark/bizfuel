@@ -1,7 +1,10 @@
+import 'package:bizfuel/model/businesstypemodel.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class Myads2 extends StatefulWidget {
-  const Myads2({super.key});
+  BusinesPost post;
+  Myads2({super.key, required this.post});
 
   @override
   State<Myads2> createState() => _Myads2State();
@@ -42,27 +45,23 @@ class _Myads2State extends State<Myads2> {
             const SizedBox(
               height: 35,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  height: 140,
-                  width: 140,
-                  decoration: const BoxDecoration(
-                      image: DecorationImage(
-                          image: AssetImage("images/watch1.jpg"))),
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                Container(
-                  height: 140,
-                  width: 140,
-                  decoration: const BoxDecoration(
-                      image: DecorationImage(
-                          image: AssetImage("images/watch2.jpg"))),
-                )
-              ],
+            SizedBox(
+              height: 140,
+              child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) => Container(
+                        height: 140,
+                        width: 140,
+                        decoration: BoxDecoration(
+                            image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image:
+                                    NetworkImage(widget.post.images[index]))),
+                      ),
+                  separatorBuilder: (context, index) => SizedBox(
+                        width: 20,
+                      ),
+                  itemCount: widget.post.images.length),
             ),
             const SizedBox(
               height: 35,
@@ -87,9 +86,9 @@ class _Myads2State extends State<Myads2> {
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all()),
-              child: const Center(child: Text("Premium Watches")),
+              child: Center(child: Text(widget.post.businesname)),
             )),
-            const SizedBox(
+            SizedBox(
               height: 30,
             ),
             Center(
@@ -97,7 +96,7 @@ class _Myads2State extends State<Myads2> {
               height: 40,
               width: 320,
               decoration: BoxDecoration(
-                  boxShadow: const [
+                  boxShadow: [
                     BoxShadow(
                         color: Colors.black,
                         offset: Offset(1.0, 2.0),
@@ -112,14 +111,14 @@ class _Myads2State extends State<Myads2> {
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all()),
-              child: const Center(child: Text("Kerala,Manjeri")),
+              child: Center(child: Text(widget.post.location)),
             )),
-            const SizedBox(
+            SizedBox(
               height: 30,
             ),
             Center(
                 child: Container(
-                    height: 100,
+                    // height: 100
                     width: 320,
                     decoration: BoxDecoration(
                         boxShadow: const [
@@ -137,10 +136,10 @@ class _Myads2State extends State<Myads2> {
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all()),
-                    child: const Padding(
+                    child: Padding(
                       padding: EdgeInsets.all(8.0),
                       child: Text(
-                          "These watches have smaller diameter dials compared to standered watches,typically ranging from around 28mm to 36mm in diameter"),
+                          "Description:\n${widget.post.description}\n\nKey Features:\n${widget.post.keyfeature}"),
                     ))),
           ],
         ),
