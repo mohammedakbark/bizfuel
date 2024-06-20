@@ -39,10 +39,10 @@ class _BizhomepgeState extends State<Bizhomepge> {
                   children: [
                     const SizedBox(width: 5),
                     const Icon(Icons.location_on_outlined),
-                    const Text(
-                      "Kerala, India",
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
+                    // const Text(
+                    //   "Kerala, India",
+                    //   style: TextStyle(fontWeight: FontWeight.bold),
+                    // ),
                     const Icon(Icons.keyboard_arrow_down, size: 27),
                     const Spacer(),
                     IconButton(
@@ -109,15 +109,16 @@ class _BizhomepgeState extends State<Bizhomepge> {
                                   child: CircularProgressIndicator(),
                                 );
                               }
+                              List<UserRegModel> userList = snapshot.data!.docs
+                                  .map((e) => UserRegModel.fromjsone(e.data()))
+                                  .toList();
                               if (!snapshot.hasData ||
                                   snapshot.data!.docs.isEmpty) {
                                 return const Center(
                                   child: CircularProgressIndicator(),
                                 );
                               }
-                              List<UserRegModel> userList = snapshot.data!.docs
-                                  .map((e) => UserRegModel.fromjsone(e.data()))
-                                  .toList();
+
                               return GridView.builder(
                                 gridDelegate:
                                     const SliverGridDelegateWithFixedCrossAxisCount(

@@ -6,6 +6,7 @@ import 'package:bizfuel/view/modules/Resellers/resellerrequst.dart';
 import 'package:bizfuel/viewmodel/firebasehelper.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class Resellers extends StatefulWidget {
   const Resellers({super.key});
@@ -122,6 +123,7 @@ class _NewUsersState extends State<NewUsers> {
                   child: ListTile(
                     onTap: () => Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => Send_request(
+                          isFromExisting: false,
                               user: users[index],
                             ))),
                     tileColor: Colors.white,
@@ -163,59 +165,71 @@ class ExistingUsers extends StatefulWidget {
 class _ExistingUsersState extends State<ExistingUsers> {
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<QuerySnapshot>(
-        stream: FirebaseHelper().getExistingUsers(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Helper.showIndicator();
-          }
-          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return const Center(
-              child: Text("No Users Found"),
-            );
-          }
-          List<UserRegModel> users = [];
-          users = snapshot.data!.docs
-              .map((e) =>
-                  UserRegModel.fromjsone(e.data() as Map<String, dynamic>))
-              .toList();
-          return ListView.separated(
-              shrinkWrap: true,
-              itemBuilder: (context, index) {
-                return Container(
-                  margin: const EdgeInsets.all(5),
-                  height: 70,
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20)),
-                  child: ListTile(
-                    onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => Send_request(
-                              user: users[index],
-                            ))),
-                    tileColor: Colors.white,
-                    leading: CircleAvatar(
-                      backgroundImage: NetworkImage(users[index].image),
-                      radius: 20,
-                    ),
-                    title: Text(
-                      "Name:${users[index].name}",
-                      style: TextStyle(fontSize: 12),
-                    ),
-                    subtitle: Text(
-                      "Qualification:${users[index].qualification}",
-                      style: TextStyle(fontSize: 10),
-                    ),
-                    trailing: const Icon(Icons.more_vert),
-                  ),
-                );
-              },
-              separatorBuilder: (context, index) {
-                return const SizedBox(
-                  height: 10,
-                );
-              },
-              itemCount: users.length);
-        });
+    return Consumer<FirebaseHelper>(builder: (context, helper, child) {
+      return FutureBuilder(
+          future: helper.getChatpossibleUsers("Usergegitration"),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Helper.showIndicator();
+            }
+            // if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+            //   return const Center(
+            //     child: Text("No Users Found"),
+            //   );
+            // }
+            List<UserRegModel> users = [];
+            users = helper.listOfUsersForChat
+                .map((e) =>
+                    UserRegModel.fromjsone(e.data() as Map<String, dynamic>))
+                .toList();
+            // users = snapshot.data!.docs
+            //     .map((e) =>
+            //         UserRegModel.fromjsone(e.data() as Map<String, dynamic>))
+            //     .toList();
+            return users.isEmpty
+                ? Center(
+                    child: Text("No Users Found"),
+                  )
+                : ListView.separated(
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                      return Container(
+                        margin: const EdgeInsets.all(5),
+                        height: 70,
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20)),
+                        child: ListTile(
+                          onTap: () =>
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => Send_request(
+                                    isFromExisting: true,
+                                        user: users[index],
+                                      ))),
+                          tileColor: Colors.white,
+                          leading: CircleAvatar(
+                            backgroundImage: NetworkImage(users[index].image),
+                            radius: 20,
+                          ),
+                          title: Text(
+                            "Name:${users[index].name}",
+                            style: TextStyle(fontSize: 12),
+                          ),
+                          subtitle: Text(
+                            "Qualification:${users[index].qualification}",
+                            style: TextStyle(fontSize: 10),
+                          ),
+                          trailing: const Icon(Icons.more_vert),
+                        ),
+                      );
+                    },
+                    separatorBuilder: (context, index) {
+                      return const SizedBox(
+                        height: 10,
+                      );
+                    },
+                    itemCount: users.length);
+          });
+    });
   }
 }

@@ -143,7 +143,7 @@ class FirebaseHelper with ChangeNotifier {
   Stream<QuerySnapshot<Map<String, dynamic>>> getNewUsers() {
     return db
         .collection('Usergegitration')
-        .where("joinDate", isEqualTo: date)
+        // .where("joinDate", isEqualTo: date)
         .snapshots();
   }
 
@@ -426,24 +426,29 @@ class FirebaseHelper with ChangeNotifier {
 
   //---------------searchBusiness
 
-  //  List<BusinesRegistrationModel> businessList = [];
-  // getBusinessForSearch() async {
-  //   final snapshot = await db
-  //       .collection("BusinessRegistration")
+  List<BusinesRegistrationModel> businessList = [];
+  getBusinessForSearch() async {
+    getChatpossibleUsers("BusinessRegistration");
+    businessList = listOfUsersForChat
+        .map((e) => BusinesRegistrationModel.fromjsone(
+            e.data() as Map<String, dynamic>))
+        .toList();
+    // final snapshot = await db
+    //     .collection("BusinessRegistration")
 
-  //       .get();
-  //   businessList =
-  //       snapshot.docs.map((e) => BusinesRegistrationModel.fromjsone(e.data())).toList();
-  // }
+    //     .get();
+    // businessList =
+    //     snapshot.docs.map((e) => BusinesRegistrationModel.fromjsone(e.data())).toList();
+  }
 
-  //  List<BusinesRegistrationModel> businessSearchResult = [];
-  // searchABusiness(List<BusinesRegistrationModel> list, String key) {
-  //   postSeachResult = List.from(list);
+  List<BusinesRegistrationModel> businessSearchResult = [];
+  searchABusiness(List<BusinesRegistrationModel> list, String key) {
+    businessSearchResult = List.from(list);
 
-  //   businessSearchResult = list
-  //       .where(
-  //           (element) => element.businessName.toLowerCase().contains(key.toLowerCase()))
-  //       .toList();
-  //   notifyListeners();
-  // }
+    businessSearchResult = list
+        .where((element) =>
+            element.businessName.toLowerCase().contains(key.toLowerCase()))
+        .toList();
+    notifyListeners();
+  }
 }
