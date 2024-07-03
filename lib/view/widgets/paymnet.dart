@@ -29,98 +29,100 @@ class _PaymentPageState extends State<PaymentPage> {
     //     .format(DateTime(now.year + 1, now.month, now.day));
     // setState(() {});
 
-    return Padding(
-      padding: const EdgeInsets.all(20),
-      child: Column(children: [
-
-        FutureBuilder(
-          future: PaymentController().initializeUpiIndia(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Helper.showIndicator();
-            }
-            return Expanded(
-              child: ListView.separated(
-                separatorBuilder: (context, index) => const SizedBox(
-                  height: 20,
+    return AspectRatio(
+      aspectRatio: 2,
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(children: [
+          FutureBuilder(
+            future: PaymentController().initializeUpiIndia(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Helper.showIndicator();
+              }
+              return Expanded(
+                child: ListView.separated(
+                  separatorBuilder: (context, index) => const SizedBox(
+                    height: 20,
+                  ),
+                  itemCount: snapshot.data!.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      onTap: () {
+                        PaymentController()
+                            .initiateTransaction(
+                          context,
+                          app: snapshot.data![index],
+                          receiverUpiId: "receverUpid@paytm",
+                          receiverName: "dzuze",
+                        )
+                            .then((value) async {
+                          return transaction = value as Future<UpiResponse>?;
+                        }).catchError((error) {
+                          log("Error");
+                        });
+                        log("out");
+                      },
+                      leading: Image.memory(snapshot.data![index].icon),
+                      title: Text(
+                        snapshot.data![index].name,
+                        style: const TextStyle(color: Colors.black),
+                      ),
+                    );
+                  },
                 ),
-                itemCount: snapshot.data!.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    onTap: () {
-                      PaymentController()
-                          .initiateTransaction(
-                        context,
-                        app: snapshot.data![index],
-                        receiverUpiId: "receverUpid@paytm",
-                        receiverName: "BIZFUEL",
-                      )
-                          .then((value) async {
-                        return transaction = value as Future<UpiResponse>?;
-                      }).catchError((error) {
-                        log("Error");
-                      });
-                      log("out");
-                    },
-                    leading: Image.memory(snapshot.data![index].icon),
-                    title: Text(
-                      snapshot.data![index].name,
-                      style: const TextStyle(color: Colors.black),
+              );
+            },
+          ),
+          FutureBuilder(
+              future: transaction,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  if (snapshot.hasError) {
+                    return Text(_upiErrorHandler(snapshot.error.runtimeType),
+                        style: const TextStyle(
+                          fontSize: 18,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ));
+                  }
+                  UpiResponse upiResponse = snapshot.data!;
+
+                  String txnId = upiResponse.transactionId ?? 'N/A';
+                  String resCode = upiResponse.responseCode ?? 'N/A';
+                  String txnRef = upiResponse.transactionRefId ?? 'N/A';
+                  String status = upiResponse.status ?? 'N/A';
+                  String approvalRef = upiResponse.approvalRefNo ?? 'N/A';
+                  _checkTxnStatus(status);
+
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        displayTransactionData('Transaction Id', txnId),
+                        displayTransactionData('Response Code', resCode),
+                        displayTransactionData('Reference Id', txnRef),
+                        displayTransactionData('Status', status.toUpperCase()),
+                        displayTransactionData('Approval No', approvalRef),
+                      ],
                     ),
                   );
-                },
-              ),
-            );
-          },
-        ),
-        FutureBuilder(
-            future: transaction,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                if (snapshot.hasError) {
-                  return Text(_upiErrorHandler(snapshot.error.runtimeType),
-                      style: const TextStyle(
-                        fontSize: 18,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ));
                 }
-                UpiResponse upiResponse = snapshot.data!;
 
-                String txnId = upiResponse.transactionId ?? 'N/A';
-                String resCode = upiResponse.responseCode ?? 'N/A';
-                String txnRef = upiResponse.transactionRefId ?? 'N/A';
-                String status = upiResponse.status ?? 'N/A';
-                String approvalRef = upiResponse.approvalRefNo ?? 'N/A';
-                _checkTxnStatus(status);
-
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      displayTransactionData('Transaction Id', txnId),
-                      displayTransactionData('Response Code', resCode),
-                      displayTransactionData('Reference Id', txnRef),
-                      displayTransactionData('Status', status.toUpperCase()),
-                      displayTransactionData('Approval No', approvalRef),
-                    ],
-                  ),
+                return const Text(
+                  "",
+                  style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.amber),
                 );
-              }
-
-              return const Text(
-                "",
-                style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.amber),
-              );
-            }),
-        const SizedBox(
-          height: 30,
-        )
-      ]),
+              }),
+          const SizedBox(
+            height: 30,
+          )
+        ]),
+      ),
     );
   }
 

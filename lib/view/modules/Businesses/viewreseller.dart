@@ -1,5 +1,6 @@
 import 'package:bizfuel/model/userregitrationmodel.dart';
 import 'package:bizfuel/view/widgets/chat_page.dart';
+import 'package:bizfuel/view/widgets/cus_rating.dart';
 import 'package:flutter/material.dart';
 
 class ViewReseller extends StatefulWidget {
@@ -57,6 +58,13 @@ class _ViewResellerState extends State<ViewReseller> {
                   ),
                 ),
               ),
+              SizedBox(
+                height: 20,
+              ),
+              CustomRating(
+                  initalRating: CustomRating.ratings(widget.model.rating),
+                  isConst: true),
+
               Padding(
                 padding: const EdgeInsets.only(top: 45),
                 child: Container(

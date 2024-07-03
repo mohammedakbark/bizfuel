@@ -41,7 +41,7 @@ class _WelcomeState extends State<WelcomePage> {
             // const Image(image: AssetImage("images/shakehand.png", ) ),
             const SizedBox(height: 15),
             const Text(
-              "welcome to BIZFUEL",
+              "welcome to DZUZE",
               style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
             ),
             const SizedBox(
@@ -81,7 +81,7 @@ class _WelcomeState extends State<WelcomePage> {
             SizedBox(
               height: 25,
             ),
-            Text("Bizfuel © 2024")
+            Text("dzuze © 2024")
           ],
         ),
       ),

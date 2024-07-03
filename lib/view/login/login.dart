@@ -8,6 +8,7 @@ import 'package:bizfuel/view/login/tutorial.dart';
 import 'package:bizfuel/viewmodel/auth.dart';
 import 'package:bizfuel/viewmodel/firebasehelper.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 class Login extends StatefulWidget {
@@ -22,7 +23,7 @@ class _LoginState extends State<Login> {
   final password = TextEditingController();
 
   final formkey = GlobalKey<FormState>();
-
+  bool _obscurePassword = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,9 +42,12 @@ class _LoginState extends State<Login> {
                   const SizedBox(
                     height: 35,
                   ),
-                  const Text(
-                    "bizfuel",
-                    style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                  Text(
+                    "dzuze",
+                    style: GoogleFonts.aBeeZee(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                        fontSize: 30),
                   ),
                   const SizedBox(
                     height: 100,
@@ -57,7 +61,7 @@ class _LoginState extends State<Login> {
                       controller: email,
                       decoration: const InputDecoration(
                           filled: true,
-                          hintText: "Mobile number or email id",
+                          hintText: "Email Address",
                           fillColor: Color.fromARGB(229, 255, 255, 255),
                           border: OutlineInputBorder(
                               borderRadius:
@@ -71,7 +75,20 @@ class _LoginState extends State<Login> {
                     padding: const EdgeInsets.only(left: 8, right: 8),
                     child: TextFormField(
                         controller: password,
-                        decoration: const InputDecoration(
+                        obscureText: _obscurePassword,
+                        decoration: InputDecoration(
+                            suffixIcon: IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  _obscurePassword = !_obscurePassword;
+                                });
+                              },
+                              icon: Icon(
+                                _obscurePassword
+                                    ? Icons.visibility_off
+                                    : Icons.visibility,
+                              ),
+                            ),
                             filled: true,
                             hintText: "Password",
                             fillColor: Color.fromARGB(229, 255, 255, 255),
@@ -198,7 +215,7 @@ class _LoginState extends State<Login> {
                   const SizedBox(
                     height: 35,
                   ),
-                  const Text("Bizfuel © 2024")
+                  const Text("dzuze © 2024")
                 ],
               ),
             ),

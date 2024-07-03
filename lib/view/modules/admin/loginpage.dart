@@ -13,6 +13,7 @@ class AdminLoginPage extends StatefulWidget {
 class _AdminLoginPageState extends State<AdminLoginPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  bool obsecurepassword = true;
 
   final key = GlobalKey<FormState>();
   @override
@@ -81,7 +82,7 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
                             return null;
                           }
                         },
-                        obscureText: true,
+                        obscureText: obsecurepassword,
                         decoration: InputDecoration(
                           fillColor: Colors.white,
                           filled: true,
@@ -90,7 +91,15 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8.0),
                           ),
-                          suffixIcon: const Icon(Icons.visibility_off),
+                          suffixIcon: IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  obsecurepassword = !obsecurepassword;
+                                });
+                              },
+                              icon: Icon(obsecurepassword
+                                  ? Icons.visibility
+                                  : Icons.visibility_off)),
                         ),
                       ),
                     ),

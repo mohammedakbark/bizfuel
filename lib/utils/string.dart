@@ -2,13 +2,17 @@ import 'package:cherry_toast/cherry_toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
-
-var ADMINUID = "X1jnERkR2oWUGqwlzAiRSL7xxzH2";
+var appTitle = Text(
+  "dzuze",
+  style: GoogleFonts.aBeeZee(
+      fontWeight: FontWeight.bold, color: Colors.white, fontSize: 70),
+);
+var ADMINUID = "JgcEpJR5TMXzVJJd1v6FAEAAHWK2";
 var ADMINEMAIL = "admin@gmail.com";
 var ADMINPASSWORD = "admin@123";
-
 
 // <script type="text/javascript">
 //     window.flutterWebRenderer = "html";
@@ -25,7 +29,6 @@ succestoast(BuildContext context, msg) {
   CherryToast.success(title: Text(msg, style: TextStyle(color: Colors.black)))
       .show(context);
 }
-
 
 infotoast(BuildContext context, msg) {
   CherryToast.info(

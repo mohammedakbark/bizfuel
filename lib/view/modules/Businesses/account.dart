@@ -3,6 +3,8 @@ import 'dart:developer';
 import 'package:bizfuel/utils/login_preference.dart';
 import 'package:bizfuel/utils/string.dart';
 import 'package:bizfuel/view/login/login.dart';
+import 'package:bizfuel/view/modules/Businesses/edit_profile.dart';
+import 'package:bizfuel/view/widgets/feedback_page.dart';
 import 'package:bizfuel/viewmodel/firebasehelper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +34,6 @@ class _AccountState extends State<Account> {
           ),
           child: Consumer<FirebaseHelper>(
             builder: (context, helper, child) {
-             
               return FutureBuilder(
                 future: helper.getSelectedBusinesprofile(auth.currentUser!.uid),
                 builder: (context, snapshot) {
@@ -60,8 +61,14 @@ class _AccountState extends State<Account> {
                               const SizedBox(
                                 width: 50,
                               ),
-                              // TextButton(
-                              //     onPressed: () {}, child: const Text("Edit")),
+                              TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                EditProfile()));
+                                  },
+                                  child: const Text("Edit")),
                               TextButton(
                                   onPressed: () async {
                                     LoginPreference.clearPreference(context);
@@ -137,6 +144,36 @@ class _AccountState extends State<Account> {
                                   )),
                                 ),
                               ),
+                              Padding(
+                                  padding: const EdgeInsets.only(top: 90),
+                                  child: Consumer<FirebaseHelper>(
+                                    builder: (context, helper, child) {
+                                      return GestureDetector(
+                                        onTap: () {
+                                          Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      FeebackPage(
+                                                        module: "Business",
+                                                      )));
+                                        },
+                                        child: Container(
+                                          height: 45,
+                                          width: 299,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            color: Colors.white,
+                                          ),
+                                          child: const Center(
+                                              child: Text(
+                                            "Feedback",
+                                            style: TextStyle(fontSize: 18),
+                                          )),
+                                        ),
+                                      );
+                                    },
+                                  )),
                             ],
                           ),
                         )

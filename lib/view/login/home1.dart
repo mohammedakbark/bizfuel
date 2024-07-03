@@ -2,6 +2,7 @@ import 'package:bizfuel/view/modules/Businesses/bizhomepage.dart';
 import 'package:bizfuel/view/modules/Businesses/bizregistration.dart';
 import 'package:bizfuel/view/modules/Resellers/resellregistration.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Homeone extends StatefulWidget {
   const Homeone({super.key});
@@ -26,21 +27,24 @@ class _HomeoneState extends State<Homeone> {
                 const SizedBox(
                   height: 35,
                 ),
-                const Text(
-                  "bizfuel",
-                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                Text(
+                  "dzuze",
+                  style: GoogleFonts.aBeeZee(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      fontSize: 30),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 90,
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 60),
+                const Padding(
+                  padding: EdgeInsets.only(right: 60),
                   child: Text(
                     "You are in a rigth place \n Are you...??",
                     style: TextStyle(fontSize: 25),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 60,
                 ),
                 SizedBox(
@@ -48,7 +52,8 @@ class _HomeoneState extends State<Homeone> {
                   height: 100,
                   child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color.fromARGB(233, 12, 12, 12),
+                          backgroundColor:
+                              const Color.fromARGB(233, 12, 12, 12),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20))),
                       onPressed: () {
@@ -97,7 +102,7 @@ class _HomeoneState extends State<Homeone> {
                 const SizedBox(
                   height: 14,
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 45,
                 ),
                 SizedBox(
@@ -105,7 +110,8 @@ class _HomeoneState extends State<Homeone> {
                   height: 100,
                   child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color.fromARGB(233, 12, 12, 12),
+                          backgroundColor:
+                              const Color.fromARGB(233, 12, 12, 12),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20))),
                       onPressed: () {
@@ -123,10 +129,10 @@ class _HomeoneState extends State<Homeone> {
                             fontWeight: FontWeight.bold),
                       )),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 150,
                 ),
-                Text("Bizfuel © 2024")
+                const Text("dzuze © 2024")
               ]),
             )));
   }

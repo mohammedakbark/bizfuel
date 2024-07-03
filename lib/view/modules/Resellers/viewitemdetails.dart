@@ -1,4 +1,5 @@
 import 'package:bizfuel/model/businesstypemodel.dart';
+import 'package:bizfuel/model/requestmodel.dart';
 import 'package:bizfuel/utils/string.dart';
 import 'package:bizfuel/view/modules/Businesses/businesstype.dart';
 import 'package:bizfuel/viewmodel/firebasehelper.dart';
@@ -139,9 +140,12 @@ class _ViewitemDetailsState extends State<Viewitemdetails> {
                         if (!snapshot.hasData) {
                           return const SizedBox();
                         }
+                        RequestModel? requestModel;
                         bool isRequested;
                         if (snapshot.data!.exists) {
                           isRequested = true;
+                          requestModel = RequestModel.fromjosn(
+                              snapshot.data!.data() as Map<String, dynamic>);
                         } else {
                           isRequested = false;
                         }
@@ -159,7 +163,13 @@ class _ViewitemDetailsState extends State<Viewitemdetails> {
                               }
                             },
                             child: Text(
-                              isRequested ? "Requested" : "Request",
+                              requestModel != null
+                                  ? requestModel.requestStatus == "Accepted"
+                                      ? "Accepted"
+                                      : "Requested"
+                                  : isRequested
+                                      ? "Requested"
+                                      : "Request",
                               style: TextStyle(fontSize: 20),
                             ));
                       }),

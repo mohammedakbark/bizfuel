@@ -39,6 +39,7 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> {
+  AnimationController? animationController;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -73,7 +74,7 @@ class _ChatPageState extends State<ChatPage> {
               const Divider(
                 color: Colors.black,
               ),
-              isImageIsLoading ? Helper.showIndicator() : SizedBox(),
+              isImageIsLoading ? Helper.showIndicator() : const SizedBox(),
               Expanded(
                   child: StreamBuilder<QuerySnapshot>(
                       stream: CommunicationController().getMessage(
@@ -102,6 +103,9 @@ class _ChatPageState extends State<ChatPage> {
                               // return message(messageModel)
                             });
                       })),
+              SizedBox(
+                height: Helper.H(context) * .1,
+              )
             ],
           ),
         ),
@@ -121,14 +125,17 @@ class _ChatPageState extends State<ChatPage> {
                   controller: meesaagecontroller,
                   textAlign: TextAlign.left,
                   decoration: InputDecoration(
+                    hintText: "      Messsage",
                     filled: true,
                     suffixIcon: IconButton(
                         onPressed: () {
-                          CommunicationController().sendmessage(
-                              widget.anotherUserId,
-                              meesaagecontroller.text,
-                              "Text");
-                          meesaagecontroller.clear();
+                          if (meesaagecontroller.text.isNotEmpty) {
+                            CommunicationController().sendmessage(
+                                widget.anotherUserId,
+                                meesaagecontroller.text,
+                                "Text");
+                            meesaagecontroller.clear();
+                          }
                         },
                         icon: const Icon(
                           Icons.send_rounded,
@@ -146,28 +153,96 @@ class _ChatPageState extends State<ChatPage> {
               IconButton(
                   onPressed: () {
                     showModalBottomSheet(
-                        context: context, builder: (context) => PaymentPage());
+                        showDragHandle: true,
+                        context: context,
+                        builder: (context) => PaymentPage());
                   },
                   icon: const Icon(
                     Icons.monetization_on_outlined,
                     color: Colors.black,
                   )),
-              IconButton(
-                  onPressed: () {
-                    openCamera().then((value) {
-                      if (value != "") {
-                        CommunicationController()
-                            .sendmessage(widget.anotherUserId, value, "Image");
-                        setState(() {
-                          isImageIsLoading = false;
-                        });
-                      }
-                    });
-                  },
-                  icon: const Icon(
-                    Icons.camera_alt_outlined,
-                    color: Colors.black,
-                  )),
+              Builder(builder: (context) {
+                return IconButton(
+                    onPressed: () {
+                      log("message");
+                      showModalBottomSheet(
+                        // transitionAnimationController: animationController,
+                        enableDrag: true,
+                        context: context,
+                        builder: (context) {
+                          return AspectRatio(
+                              aspectRatio: 2,
+                              child: SizedBox(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Container(
+                                        height: 5,
+                                        width: 35,
+                                        decoration: BoxDecoration(
+                                            color: black,
+                                            borderRadius:
+                                                const BorderRadius.all(
+                                                    Radius.circular(2))),
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          _customeButton(Icons.image, "GALLERY",
+                                              () {
+                                            openCamera(ImageSource.gallery)
+                                                .then((value) {
+                                              if (value != "") {
+                                                CommunicationController()
+                                                    .sendmessage(
+                                                        widget.anotherUserId,
+                                                        value,
+                                                        "Image");
+                                                setState(() {
+                                                  isImageIsLoading = false;
+                                                });
+                                              }
+                                            });
+                                            // controller.pickImagesFormGallery();
+                                            Navigator.of(context).pop();
+                                          }),
+                                          _customeButton(
+                                              Icons.camera_alt, "CAMERA", () {
+                                            openCamera(ImageSource.camera)
+                                                .then((value) {
+                                              if (value != "") {
+                                                CommunicationController()
+                                                    .sendmessage(
+                                                        widget.anotherUserId,
+                                                        value,
+                                                        "Image");
+                                                setState(() {
+                                                  isImageIsLoading = false;
+                                                });
+                                              }
+                                            });
+                                            // controller.pickImageFromCamera();
+                                            Navigator.of(context).pop();
+                                          })
+                                        ],
+                                      ),
+                                      const SizedBox()
+                                    ],
+                                  ),
+                                ),
+                              ));
+                        },
+                      );
+                    },
+                    icon: const Icon(
+                      Icons.camera_alt_outlined,
+                      color: Colors.black,
+                    ));
+              }),
               IconButton(
                   onPressed: () async {
                     if (isRecording == false) {
@@ -209,8 +284,18 @@ class _ChatPageState extends State<ChatPage> {
                 height: 250,
                 width: 200,
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: Color.fromARGB(255, 146, 193, 202),
+                    borderRadius: isMe
+                        ? const BorderRadius.only(
+                            topLeft: Radius.circular(20),
+                            topRight: Radius.circular(20),
+                            bottomLeft: Radius.circular(20),
+                            bottomRight: Radius.circular(0))
+                        : const BorderRadius.only(
+                            topLeft: Radius.circular(20),
+                            topRight: Radius.circular(20),
+                            bottomLeft: Radius.circular(0),
+                            bottomRight: Radius.circular(20)),
+                    color: const Color.fromARGB(255, 146, 193, 202),
                     image: DecorationImage(
                         fit: BoxFit.cover,
                         image: NetworkImage(messageModel.message))),
@@ -221,12 +306,25 @@ class _ChatPageState extends State<ChatPage> {
               margin: const EdgeInsets.all(8.0),
               padding: const EdgeInsets.all(8.0),
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15.0),
+                  borderRadius: isMe
+                      ? const BorderRadius.only(
+                          topLeft: Radius.circular(20),
+                          topRight: Radius.circular(20),
+                          bottomLeft: Radius.circular(20),
+                          bottomRight: Radius.circular(0))
+                      : const BorderRadius.only(
+                          topLeft: Radius.circular(20),
+                          topRight: Radius.circular(20),
+                          bottomLeft: Radius.circular(0),
+                          bottomRight: Radius.circular(20)),
                   color: Colors.white),
               child: Text(messageModel.message),
             ),
           if (messageModel.messageType == "Voice")
-            VoiceMessage(url: messageModel.message)
+            VoiceMessage(
+              url: messageModel.message,
+              anotheruid: messageModel.senderID,
+            )
         ]));
   }
 
@@ -285,7 +383,7 @@ class _ChatPageState extends State<ChatPage> {
 
   File? image;
   bool isImageIsLoading = false;
-  Future<String> openCamera() async {
+  Future<String> openCamera(ImageSource source) async {
     final chatRoomId = [
       FirebaseAuth.instance.currentUser!.uid,
       widget.anotherUserId
@@ -295,7 +393,7 @@ class _ChatPageState extends State<ChatPage> {
     final Timestamp time = Timestamp.now();
     final storage = FirebaseStorage.instance;
     ImagePicker picker = ImagePicker();
-    final pickeedFile = await picker.pickImage(source: ImageSource.camera);
+    final pickeedFile = await picker.pickImage(source: source);
     if (pickeedFile == null) return "";
 
     image = File(pickeedFile.path);
@@ -376,4 +474,39 @@ class _ChatPageState extends State<ChatPage> {
       // log("========================$value========ooo===============");
     });
   }
+
+  Widget _customeButton(IconData icon, String text, void Function()? onTap) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        height: Helper.H(context) * .12,
+        width: Helper.W(context) * .4,
+        decoration: BoxDecoration(
+          // color: black,
+          border: Border.all(color: black, width: 4),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              icon,
+              color: black,
+              size: 50,
+            ),
+            Text(
+              text,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: black,
+                letterSpacing: 1,
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  final black = Colors.black;
 }

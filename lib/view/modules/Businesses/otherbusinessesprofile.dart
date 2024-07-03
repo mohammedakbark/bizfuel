@@ -74,37 +74,44 @@ class _OtherBusinessProfileState extends State<OtherBusinessProfile> {
             const SizedBox(
               height: 20,
             ),
-            // const Text(
-            //   "More Info lets chat",
-            //   style: TextStyle(fontWeight: FontWeight.bold),
-            // ),
-            // const SizedBox(
-            //   height: 40,
-            // ),
-            // SizedBox(
-            //     width: 200,
-            //     height: 50,
-            //     child: ElevatedButton(
-            //         style: ElevatedButton.styleFrom(
-            //             backgroundColor:
-            //                 const Color.fromARGB(255, 31, 162, 136),
-            //             foregroundColor: Colors.black,
-            //             shape: RoundedRectangleBorder(
-            //                 borderRadius: BorderRadius.circular(10))),
-            //         onPressed: () {
-            //           // Navigator.push(context,
-            //           //     MaterialPageRoute(builder: (context) => Chats()));
-            //         },
-            //         child: const Text(
-            //           "Chat",
-            //           style:
-            //               TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-            //         )))
+            const Text(
+              "More Info lets chat",
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(
+              height: 40,
+            ),
+            SizedBox(
+                width: 200,
+                height: 50,
+                child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            const Color.fromARGB(255, 31, 162, 136),
+                        foregroundColor: Colors.black,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10))),
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ChatPage(
+                                    anotherUserId: widget.business.id!,
+                                    anotherUserProfile: widget.business.image,
+                                    anotherUsername:
+                                        widget.business.businessName,
+                                    contactNumber: widget.business.phonenumber,
+                                    isThisBusinessProfile: true,
+                                  )));
+                    },
+                    child: const Text(
+                      "Chat",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                    )))
           ],
         ),
       ),
     ));
   }
-
- 
 }

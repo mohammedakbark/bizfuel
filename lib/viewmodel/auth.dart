@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:bizfuel/model/businessregistration.dart';
 import 'package:bizfuel/model/userregitrationmodel.dart';
 import 'package:bizfuel/utils/login_preference.dart';
@@ -25,6 +27,14 @@ class AuthControoler with ChangeNotifier {
       )
           .then(
         (value) {
+          value.user!.sendEmailVerification().then((value) {
+            log("success");
+            // CSnackbar.showSuccessToast(context, "Verify your email");
+          }).catchError((error) {
+            // CSnackbar.showErrorToast(context, error.toString());
+            log("error");
+          });
+
           authprvdr.addBusinessReg(
             BusinesRegistrationModel(
               businessName: businesname,
@@ -60,6 +70,7 @@ class AuthControoler with ChangeNotifier {
         User? user = value.user;
 
         if (user != null) {
+          if (user.emailVerified) {
           String uid = user.uid;
           final userdoc =
               await db.collection('BusinessRegistration').doc(uid).get();
@@ -80,6 +91,12 @@ class AuthControoler with ChangeNotifier {
 
             CSnackbar.showSuccessToast(context, "LOGIN SUCCESS");
           }
+          } else {
+            CSnackbar.showErrorToast(context, "Verify your email!");
+            user.sendEmailVerification().then((value) {
+              auth.signOut();
+            });
+          }
         }
       });
     } catch (e) {
@@ -87,37 +104,8 @@ class AuthControoler with ChangeNotifier {
     }
   }
 
-  // Future signinUser(email, password, BuildContext context) async {
-  //   try {
-  //     UserCredential credential = await auth.signInWithEmailAndPassword(
-  //         email: email, password: password);
-
-  //     User? user = credential.user;
-
-  //     if (user != null) {
-  //       String uid = credential.user!.uid;
-  //       final userdoc = await db.collection('userregitreation').doc(uid).get();
-
-  //       if (userdoc.exists) {
-  //         Navigator.of(context)
-  //             .push(MaterialPageRoute(builder: (context) => BizbottomNavi()));
-  //       } else {
-  //         Navigator.push(
-  //           context,
-  //           MaterialPageRoute(
-  //             builder: (context) => Check(),
-  //           ),
-  //         );
-  //       }
-  //     }
-  //   } catch (e) {
-  //     throw e.toString();
-  //   }
-  // }
-
   Future userRegitration(
     email,
-    
     password,
     context,
     img,
@@ -135,9 +123,17 @@ class AuthControoler with ChangeNotifier {
       )
           .then(
         (value) {
+          value.user!.sendEmailVerification().then((value) {
+            log("success");
+            // CSnackbar.showSuccessToast(context, "Verify your email");
+          }).catchError((error) {
+            // CSnackbar.showErrorToast(context, error.toString());
+            log("error");
+          });
           authprvdr.addsellerRegister(
               UserRegModel(
-                contactNumber:phonenumber ,
+                rating: 0,
+                contactNumber: phonenumber,
                 joinDate: date,
                 email: email,
                 name: name,

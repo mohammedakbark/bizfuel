@@ -1,5 +1,8 @@
 import 'package:bizfuel/view/login/varification.dart';
+import 'package:bizfuel/view/widgets/snackbars.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class Reset extends StatefulWidget {
   const Reset({super.key});
@@ -9,6 +12,7 @@ class Reset extends StatefulWidget {
 }
 
 class _ResetState extends State<Reset> {
+  final email = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,29 +46,34 @@ class _ResetState extends State<Reset> {
                 "images/password.png",
                 scale: 1.5,
               ),
-              const Padding(
-                padding: EdgeInsets.only(right: 170, top: 20),
-                child: Text(
-                  'Mobile number or email:',
-                  style: TextStyle(
-                    fontSize: 17,
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 12,
-              ),
               Padding(
-                padding: const EdgeInsets.only(right: 7, left: 7),
-                child: TextField(
-                    decoration: InputDecoration(
-                        fillColor: Colors.white,
-                        filled: true,
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10)))),
-              ),
-              SizedBox(
-                height: 115,
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        'Email:',
+                        style: TextStyle(
+                          fontSize: 17,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 12,
+                    ),
+                    TextField(
+                        controller: email,
+                        decoration: InputDecoration(
+                            fillColor: Colors.white,
+                            filled: true,
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10)))),
+                    SizedBox(
+                      height: 115,
+                    ),
+                  ],
+                ),
               ),
               SizedBox(
                 width: 170,
@@ -75,8 +84,21 @@ class _ResetState extends State<Reset> {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20))),
                     onPressed: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => Varify()));
+                      if (email.text.isNotEmpty) {
+                        FirebaseAuth.instance
+                            .sendPasswordResetEmail(email: email.text)
+                            .then((value) {
+                          CSnackbar.showSuccessToast(context,
+                              "Password reset link shared to ${email.text}");
+                          Navigator.of(context).pop();
+                        }).catchError((error) {
+                          CSnackbar.showErrorToast(
+                              context, "Error while sending password reset");
+                        });
+                      }
+
+                      //   Navigator.push(context,
+                      //       MaterialPageRoute(builder: (context) => Varify()));
                     },
                     child: const Text(
                       "SEND",

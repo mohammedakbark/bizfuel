@@ -1,3 +1,4 @@
+import 'package:bizfuel/view/modules/admin/widget.dart';
 import 'package:bizfuel/view/widgets/snackbars.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -53,31 +54,7 @@ class _AdminViewResellersState extends State<AdminViewResellers> {
                         ),
                       ),
                     ),
-                    Row(
-                      children: [
-                        TextButton(
-                          onPressed: () {},
-                          child: const Text(
-                            'About Us',
-                            style: TextStyle(color: Colors.black),
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () {},
-                          child: const Text(
-                            'Contact Us',
-                            style: TextStyle(color: Colors.black),
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () {},
-                          child: const Text(
-                            'Logout',
-                            style: TextStyle(color: Colors.black),
-                          ),
-                        ),
-                      ],
-                    ),
+                  topAppBar(context)
                   ],
                 ),
               ),

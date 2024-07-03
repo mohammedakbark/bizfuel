@@ -1,4 +1,4 @@
-import 'package:bizfuel/view/login/letsgo.dart';
+import 'package:bizfuel/view/login/initail_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -19,7 +19,8 @@ class LoginPreference {
     FirebaseAuth.instance.signOut().then((value) {
       prefer.remove("key");
       Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => Letsgo()), (route) => false);
+          MaterialPageRoute(builder: (context) => InitailPage()),
+          (route) => false);
     });
   }
 }

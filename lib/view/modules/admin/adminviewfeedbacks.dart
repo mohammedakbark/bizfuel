@@ -1,4 +1,8 @@
+import 'package:bizfuel/model/feeback_model.dart';
 import 'package:bizfuel/view/modules/admin/feedbackpage.dart';
+import 'package:bizfuel/view/modules/admin/widget.dart';
+import 'package:bizfuel/viewmodel/firebasehelper.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class AdminViewfeedBack extends StatefulWidget {
@@ -53,7 +57,7 @@ class _AdminViewSecurityState extends State<AdminViewfeedBack> {
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  child: Text(
+                  child: const Text(
                     "Home",
                     style: TextStyle(
                       fontSize: 20,
@@ -61,89 +65,126 @@ class _AdminViewSecurityState extends State<AdminViewfeedBack> {
                       color: Colors.black,
                     ),
                   )),
-              Row(
-                children: [
-                  TextButton(
-                    onPressed: () {},
-                    child: const Text(
-                      'About Us',
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {},
-                    child: const Text(
-                      'Contact Us',
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {},
-                    child: const Text(
-                      'Logout',
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ),
-                ],
-              ),
+              topAppBar(context)
             ],
           ),
         ),
-        Expanded(
-          child: ListView.builder(
-              itemCount: data.length,
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  child: Container(
-                    width: double.infinity,
-                    height: 100,
-                    child: Row(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 20),
-                          child: CircleAvatar(
-                            radius: 30,
-                            backgroundImage: NetworkImage(data[index]['img']!),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 17.0, left: 10),
-                          child: Column(
-                            children: [
-                              Text(data[index]['name']!),
-                              Text(data[index]["type"]!),
-                              Text(data[index]["room"]!)
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 190),
-                          child: SizedBox(
-                            width: 120,
-                            height: 40,
-                            child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.blue,
-                                    foregroundColor: Colors.black,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.zero)),
-                                onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              FeedbackPage()));
-                                },
-                                child: Text("View")),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
+        StreamBuilder<QuerySnapshot>(
+            stream:
+                FirebaseFirestore.instance.collection("Feedback").snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: CircularProgressIndicator(),
                 );
-              }),
-        ),
+              }
+
+              List<FeedbackModel> listOfFeeedbac = [];
+              listOfFeeedbac = snapshot.data!.docs
+                  .map((e) =>
+                      FeedbackModel.fromjson(e.data() as Map<String, dynamic>))
+                  .toList();
+              if (!snapshot.hasData) {
+                return const SizedBox();
+              }
+              return Expanded(
+                child: ListView.builder(
+                    itemCount: listOfFeeedbac.length,
+                    itemBuilder: (context, index) {
+                      return FutureBuilder<
+                              DocumentSnapshot<Map<String, dynamic>>>(
+                          future: listOfFeeedbac[index].fromModule == "Reseller"
+                              ? FirebaseHelper().getSelectedReSellerProfile(
+                                  listOfFeeedbac[index].uid)
+                              : FirebaseHelper().getSelectedBusinesprofile(
+                                  listOfFeeedbac[index].uid),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return SizedBox();
+                            }
+                            Map<String, dynamic> doc =
+                                snapshot.data!.data() as Map<String, dynamic>;
+
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              child: SizedBox(
+                                width: double.infinity,
+                                height: 100,
+                                child: Row(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 20),
+                                      child: CircleAvatar(
+                                        radius: 30,
+                                        backgroundImage: NetworkImage(
+                                            listOfFeeedbac[index].fromModule ==
+                                                    "Reseller"
+                                                ? doc["image"]
+                                                : doc["image"]),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 17.0, left: 10),
+                                      child: Column(
+                                        children: [
+                                          Text(listOfFeeedbac[index]
+                                                      .fromModule ==
+                                                  "Reseller"
+                                              ? doc["name"]
+                                              : doc["businesname"]),
+                                          Text(listOfFeeedbac[index]
+                                                      .fromModule ==
+                                                  "Reseller"
+                                              ? doc["email"]
+                                              : doc["email"]),
+                                          Text(listOfFeeedbac[index]
+                                                      .fromModule ==
+                                                  "Reseller"
+                                              ? doc["qualification"]
+                                              : doc["phonenumber"])
+                                        ],
+                                      ),
+                                    ),
+                                    Spacer(),
+                                    SizedBox(
+                                      width: 120,
+                                      height: 40,
+                                      child: ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                              backgroundColor: Colors.blue,
+                                              foregroundColor: Colors.black,
+                                              shape:
+                                                  const RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.zero)),
+                                          onPressed: () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        AdminFeedbackPage(
+                                                          image: doc["image"],
+                                                          name: listOfFeeedbac[index]
+                                                      .fromModule ==
+                                                  "Reseller"
+                                              ? doc["name"]
+                                              : doc["businesname"],
+                                                          data: listOfFeeedbac[
+                                                              index],
+                                                        )));
+                                          },
+                                          child: const Text("View")),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            );
+                          });
+                    }),
+              );
+            }),
       ])
     ]));
   }

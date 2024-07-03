@@ -24,6 +24,9 @@ class _BizregistrationState extends State<Bizregistration> {
 
   bool ischecked = false;
 
+  bool _obscureConfirmPassword = false;
+  bool _obscurePassword = false;
+
   // void postData() async {
   //   if (!ischecked) {
   //     ScaffoldMessenger.of(context).showSnackBar(
@@ -165,6 +168,7 @@ class _BizregistrationState extends State<Bizregistration> {
                                     return null;
                                   },
                                   decoration: const InputDecoration(
+                                    helperMaxLines: 10,
                                     filled: true,
                                     hintText: "Phone Number",
                                     fillColor: Colors.white,
@@ -190,7 +194,7 @@ class _BizregistrationState extends State<Bizregistration> {
                                 const SizedBox(height: 15),
                                 TextFormField(
                                   controller: passwordcontroller,
-                                  obscureText: true,
+                                  obscureText: _obscurePassword,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
                                       return "required field";
@@ -203,16 +207,23 @@ class _BizregistrationState extends State<Bizregistration> {
                                     fillColor: Colors.white,
                                     border: const OutlineInputBorder(),
                                     suffixIcon: IconButton(
-                                      onPressed: () {},
-                                      icon: const Icon(
-                                          Icons.remove_red_eye_rounded),
+                                      onPressed: () {
+                                        setState(() {
+                                          _obscurePassword = !_obscurePassword;
+                                        });
+                                      },
+                                      icon: Icon(
+                                        _obscurePassword
+                                            ? Icons.visibility_off
+                                            : Icons.visibility,
+                                      ),
                                     ),
                                   ),
                                 ),
                                 const SizedBox(height: 15),
                                 TextFormField(
                                   controller: confirmpasswordcontroller,
-                                  obscureText: true,
+                                  obscureText: _obscureConfirmPassword,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
                                       return "required field";
@@ -225,9 +236,17 @@ class _BizregistrationState extends State<Bizregistration> {
                                     fillColor: Colors.white,
                                     border: const OutlineInputBorder(),
                                     suffixIcon: IconButton(
-                                      onPressed: () {},
-                                      icon: const Icon(
-                                          Icons.remove_red_eye_rounded),
+                                      onPressed: () {
+                                        setState(() {
+                                          _obscureConfirmPassword =
+                                              !_obscureConfirmPassword;
+                                        });
+                                      },
+                                      icon: Icon(
+                                        _obscureConfirmPassword
+                                            ? Icons.visibility_off
+                                            : Icons.visibility,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -283,15 +302,23 @@ class _BizregistrationState extends State<Bizregistration> {
                                                     context,
                                                     "Image not picked");
                                               } else {
-                                                authprov.businessRegistration(
+                                                authprov
+                                                    .businessRegistration(
                                                   emailcontroller.text,
                                                   passwordcontroller.text,
                                                   context,
                                                   businessnamecontroller.text,
                                                   firehelper.url,
                                                   phnocontroller.text,
-                                                );
-                                                
+                                                )
+                                                    .then((value) {
+                                                  emailcontroller.clear();
+                                                  passwordcontroller.clear();
+                                                  businessnamecontroller
+                                                      .clear();
+                                                  firehelper.clearUrl();
+                                                  phnocontroller.clear();
+                                                });
                                               }
                                             }
                                           },

@@ -41,48 +41,48 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyCe40xLE01HkxyR0wdJZiSx5Y-uvOHRWEk',
-    appId: '1:573767214589:web:e85245ff18c5fe40bfa594',
-    messagingSenderId: '573767214589',
-    projectId: 'bizfuel-c67b7',
-    authDomain: 'bizfuel-c67b7.firebaseapp.com',
-    storageBucket: 'bizfuel-c67b7.appspot.com',
-    measurementId: 'G-14L1Q60C3R',
+    apiKey: 'AIzaSyA2tdQqL9_2wtw7WKvJcOxPpXQ72vQ7lPs',
+    appId: '1:381843955978:web:ea04e41347739963371af3',
+    messagingSenderId: '381843955978',
+    projectId: 'd-zuze',
+    authDomain: 'd-zuze.firebaseapp.com',
+    storageBucket: 'd-zuze.appspot.com',
+    measurementId: 'G-6VCN469VJ9',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDJxxlZ7F7_quvm3JA1p4EQpQqiRDlpkZE',
-    appId: '1:573767214589:android:4ba5638e1f3c0fc9bfa594',
-    messagingSenderId: '573767214589',
-    projectId: 'bizfuel-c67b7',
-    storageBucket: 'bizfuel-c67b7.appspot.com',
+    apiKey: 'AIzaSyAijrFB2MDGiX66Rd3d32L3EA4mrOP_Ijo',
+    appId: '1:381843955978:android:b5410eec262bce8a371af3',
+    messagingSenderId: '381843955978',
+    projectId: 'd-zuze',
+    storageBucket: 'd-zuze.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyBbHuZ_zZGD1kG753UyebteJc95EzK-tjA',
-    appId: '1:573767214589:ios:a9fb4a09032af777bfa594',
-    messagingSenderId: '573767214589',
-    projectId: 'bizfuel-c67b7',
-    storageBucket: 'bizfuel-c67b7.appspot.com',
+    apiKey: 'AIzaSyCR2CJVcoW4P9kSqrdIuDs6WdmZEQHWG7c',
+    appId: '1:381843955978:ios:18cb4934404c366c371af3',
+    messagingSenderId: '381843955978',
+    projectId: 'd-zuze',
+    storageBucket: 'd-zuze.appspot.com',
     iosBundleId: 'com.example.bizfuel',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyBbHuZ_zZGD1kG753UyebteJc95EzK-tjA',
-    appId: '1:573767214589:ios:a9fb4a09032af777bfa594',
-    messagingSenderId: '573767214589',
-    projectId: 'bizfuel-c67b7',
-    storageBucket: 'bizfuel-c67b7.appspot.com',
+    apiKey: 'AIzaSyCR2CJVcoW4P9kSqrdIuDs6WdmZEQHWG7c',
+    appId: '1:381843955978:ios:18cb4934404c366c371af3',
+    messagingSenderId: '381843955978',
+    projectId: 'd-zuze',
+    storageBucket: 'd-zuze.appspot.com',
     iosBundleId: 'com.example.bizfuel',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyCe40xLE01HkxyR0wdJZiSx5Y-uvOHRWEk',
-    appId: '1:573767214589:web:56e0081cd6439512bfa594',
-    messagingSenderId: '573767214589',
-    projectId: 'bizfuel-c67b7',
-    authDomain: 'bizfuel-c67b7.firebaseapp.com',
-    storageBucket: 'bizfuel-c67b7.appspot.com',
-    measurementId: 'G-GS46C7K03S',
+    apiKey: 'AIzaSyA2tdQqL9_2wtw7WKvJcOxPpXQ72vQ7lPs',
+    appId: '1:381843955978:web:8a66df4974636636371af3',
+    messagingSenderId: '381843955978',
+    projectId: 'd-zuze',
+    authDomain: 'd-zuze.firebaseapp.com',
+    storageBucket: 'd-zuze.appspot.com',
+    measurementId: 'G-XJ23BVXLT2',
   );
 }

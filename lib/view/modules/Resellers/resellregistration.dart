@@ -7,6 +7,7 @@ import 'package:bizfuel/viewmodel/auth.dart';
 import 'package:bizfuel/viewmodel/firebasehelper.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class Resellregistration extends StatefulWidget {
@@ -143,8 +144,13 @@ class _ResellregistrationState extends State<Resellregistration> {
                                 ),
                                 const SizedBox(height: 15),
                                 TextFormField(
+                                  keyboardType: TextInputType.number,
                                   controller: phoneController,
+                                  inputFormatters: [
+                                    LengthLimitingTextInputFormatter(10 )
+                                  ],
                                   decoration: const InputDecoration(
+                                    helperMaxLines: 10,
                                     filled: true,
                                     hintText: "Contact Number",
                                     fillColor: Colors.white,
@@ -308,6 +314,7 @@ class _ResellregistrationState extends State<Resellregistration> {
                                                 )
                                                     .then((value) {
                                                   clear();
+                                                  helper.clearUrl();
                                                 });
                                               }
                                             } else {

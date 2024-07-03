@@ -1,5 +1,6 @@
 import 'package:bizfuel/firebase_options.dart';
-import 'package:bizfuel/view/login/letsgo.dart';
+import 'package:bizfuel/view/login/initail_page.dart';
+import 'package:bizfuel/view/modules/admin/front_page.dart';
 import 'package:bizfuel/view/modules/admin/loginpage.dart';
 import 'package:bizfuel/viewmodel/auth.dart';
 import 'package:bizfuel/viewmodel/firebasehelper.dart';
@@ -31,14 +32,15 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) => FirebaseHelper(),
         ),
-          ChangeNotifierProvider(
+        ChangeNotifierProvider(
           create: (context) => PaymentController(),
         ),
       ],
       child: const MaterialApp(
-          debugShowCheckedModeBanner: false,
-          // home: Letsgo(),
-          home:  Letsgo()),
+        debugShowCheckedModeBanner: false,
+        home: InitailPage(),
+        // home:  AdminFrontPage()
+      ),
     );
   }
 }

@@ -19,9 +19,9 @@ class RequestModel {
 
   factory RequestModel.fromjosn(Map<String, dynamic> json) {
     return RequestModel(
-        receiverId: json["receiverId"],
-        requestId: json["requestId"],
-        requestStatus: json["requestStatus"],
-        sendeId: json["sendeId"]);
+        receiverId: json["receiverId"] ?? "NA",
+        requestId: json["requestId"] ?? "NA",
+        requestStatus: json["requestStatus"] ?? "NA",
+        sendeId: json["sendeId"] ?? "NA");
   }
 }

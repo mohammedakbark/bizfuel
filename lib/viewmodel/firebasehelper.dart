@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:bizfuel/model/businessregistration.dart';
 import 'package:bizfuel/model/businesstypemodel.dart';
+import 'package:bizfuel/model/feeback_model.dart';
 import 'package:bizfuel/model/requestmodel.dart';
 import 'package:bizfuel/model/userregitrationmodel.dart';
 import 'package:bizfuel/utils/string.dart';
@@ -14,6 +15,11 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class FirebaseHelper with ChangeNotifier {
+  double? rating;
+  updateRating(rate) {
+    rating = rate;
+  }
+
   final businessname = TextEditingController();
   final contactnumber = TextEditingController();
   final keyfeature = TextEditingController();
@@ -56,9 +62,20 @@ class FirebaseHelper with ChangeNotifier {
     notifyListeners();
   }
 
+  Future editBusinessPost(postId, BusinesPost post) async {
+    await db.collection('BusinesPost').doc(postId).update(post.toJsone(postId));
+  }
+
+  deletemyad(postId) async {
+    await db.collection('BusinesPost').doc(postId).delete();
+  }
+
   File? selectimage;
   String? url;
   List<File> listOfImages = [];
+  clearUrl() {
+    url = null;
+  }
 
   pickMultipleImage() async {
     listOfImages = [];
@@ -395,6 +412,11 @@ class FirebaseHelper with ChangeNotifier {
     notifyListeners();
   }
 
+  clearads() {
+    postList = [];
+    // notifyListeners();
+  }
+
   ///----------------\
   ///
   ///
@@ -428,17 +450,23 @@ class FirebaseHelper with ChangeNotifier {
 
   List<BusinesRegistrationModel> businessList = [];
   getBusinessForSearch() async {
+    log("in");
     getChatpossibleUsers("BusinessRegistration");
     businessList = listOfUsersForChat
         .map((e) => BusinesRegistrationModel.fromjsone(
             e.data() as Map<String, dynamic>))
         .toList();
-    // final snapshot = await db
-    //     .collection("BusinessRegistration")
+  }
 
-    //     .get();
-    // businessList =
-    //     snapshot.docs.map((e) => BusinesRegistrationModel.fromjsone(e.data())).toList();
+  getAllBusinessForSearch() {
+    final snapshot = getAllWithoutCurrentBusines();
+
+    snapshot.listen((event) {
+      businessList = event.docs
+          .map((e) => BusinesRegistrationModel.fromjsone(
+              e.data() as Map<String, dynamic>))
+          .toList();
+    });
   }
 
   List<BusinesRegistrationModel> businessSearchResult = [];
@@ -448,6 +476,32 @@ class FirebaseHelper with ChangeNotifier {
     businessSearchResult = list
         .where((element) =>
             element.businessName.toLowerCase().contains(key.toLowerCase()))
+        .toList();
+    notifyListeners();
+  }
+
+  //---------------feedback
+  addFeddback(FeedbackModel model) {
+    final dd = FirebaseFirestore.instance.collection('Feedback').doc();
+
+    dd.set(model.toJson(dd.id));
+  }
+
+  //get all user for search
+  List<UserRegModel> listOfUserForSearch = [];
+  getAllUserForSearch() async {
+    final snaos = await db.collection("Usergegitration").get();
+    listOfUserForSearch =
+        snaos.docs.map((e) => UserRegModel.fromjsone(e.data())).toList();
+  }
+
+  List<UserRegModel> userSearchResult = [];
+  searchAUser(List<UserRegModel> list, String key) {
+    userSearchResult = List.from(list);
+
+    userSearchResult = list
+        .where(
+            (element) => element.name.toLowerCase().contains(key.toLowerCase()))
         .toList();
     notifyListeners();
   }

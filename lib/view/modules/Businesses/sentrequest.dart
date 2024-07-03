@@ -3,6 +3,7 @@ import 'package:bizfuel/model/userregitrationmodel.dart';
 import 'package:bizfuel/utils/string.dart';
 import 'package:bizfuel/view/widgets/boxtile.dart';
 import 'package:bizfuel/view/widgets/chat_page.dart';
+import 'package:bizfuel/view/widgets/cus_rating.dart';
 import 'package:bizfuel/viewmodel/firebasehelper.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -47,6 +48,12 @@ class Send_request extends StatelessWidget {
               const SizedBox(
                 height: 20,
               ),
+              CustomRating(
+                  initalRating: CustomRating.ratings(user.rating.toDouble()),
+                  isConst: true),
+              const SizedBox(
+                height: 20,
+              ),
               boxtile(user.name),
               const SizedBox(
                 height: 20,
@@ -62,7 +69,8 @@ class Send_request extends StatelessWidget {
               isFromExisting
                   ? ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color.fromARGB(255, 78, 189, 178)),
+                          backgroundColor:
+                              const Color.fromARGB(255, 78, 189, 178)),
                       onPressed: () {
                         Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => ChatPage(
@@ -85,12 +93,16 @@ class Send_request extends StatelessWidget {
                             ConnectionState.waiting) {
                           return Helper.showIndicator();
                         }
+
                         if (!snapshot.hasData) {
                           return const SizedBox();
                         }
+                        RequestModel? requestModel;
                         bool isRequested;
                         if (snapshot.data!.exists) {
                           isRequested = true;
+                          requestModel = RequestModel.fromjosn(
+                              snapshot.data!.data() as Map<String, dynamic>);
                         } else {
                           isRequested = false;
                         }
@@ -107,7 +119,13 @@ class Send_request extends StatelessWidget {
                                   : const MaterialStatePropertyAll(
                                       Color.fromARGB(255, 78, 189, 178))),
                           child: Text(
-                            isRequested ? "Requested" : "Request",
+                            requestModel != null
+                                ? requestModel.requestStatus == "Accepted"
+                                    ? "Accepted"
+                                    : "Requested"
+                                : isRequested
+                                    ? "Requested"
+                                    : "Request",
                             style: const TextStyle(
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold),

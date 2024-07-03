@@ -1,11 +1,18 @@
+import 'package:bizfuel/model/feeback_model.dart';
+import 'package:bizfuel/view/modules/admin/widget.dart';
 import 'package:flutter/material.dart';
 
-class FeedbackPage extends StatefulWidget {
+class AdminFeedbackPage extends StatefulWidget {
+  FeedbackModel data;
+  String image;
+  String name;
+  AdminFeedbackPage(
+      {super.key, required this.data, required this.name, required this.image});
   @override
-  State<FeedbackPage> createState() => _FeedbackPageState();
+  State<AdminFeedbackPage> createState() => _AdminFeedbackPageState();
 }
 
-class _FeedbackPageState extends State<FeedbackPage> {
+class _AdminFeedbackPageState extends State<AdminFeedbackPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,7 +35,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  child: Text(
+                  child: const Text(
                     "Home",
                     style: TextStyle(
                       fontSize: 20,
@@ -36,31 +43,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
                       color: Colors.black,
                     ),
                   )),
-              Row(
-                children: [
-                  TextButton(
-                    onPressed: () {},
-                    child: const Text(
-                      'About Us',
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {},
-                    child: const Text(
-                      'Contact Us',
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {},
-                    child: const Text(
-                      'Logout',
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ),
-                ],
-              ),
+             topAppBar(context)
             ],
           ),
         ),
@@ -71,41 +54,49 @@ class _FeedbackPageState extends State<FeedbackPage> {
             children: [
               ListTile(
                 leading: CircleAvatar(
-                  backgroundImage: AssetImage('assets/avatar.png'),
+                  backgroundImage: NetworkImage(widget.image),
                 ),
-                title: Text('Veenu'),
-                subtitle: Text('A-101'),
+                title: Text(widget.name),
               ),
-              SizedBox(height: 16),
-              TextFormField(
-                decoration: InputDecoration(
-                  fillColor: Colors.white,
-                  filled: true,
-                  labelText: 'please check the privacy in pools areas',
-                  border: OutlineInputBorder(),
+              const SizedBox(height: 16),
+              Container(
+                alignment: Alignment.topLeft,
+                width: double.infinity,
+                margin: const EdgeInsets.all(30),
+                padding: const EdgeInsets.all(20),
+                decoration:
+                    BoxDecoration(border: Border.all(), color: Colors.white),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(widget.data.feedbackMessage),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Text(widget.data.timestamp!.toDate().toString())
+                  ],
                 ),
-                maxLines: 3,
-              ),
-              SizedBox(height: 16),
-              TextFormField(
-                decoration: InputDecoration(
-                  fillColor: Colors.white,
-                  filled: true,
-                  labelText: 'Replay:',
-                  border: OutlineInputBorder(),
-                ),
-                maxLines: 3,
-              ),
-              SizedBox(height: 16),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: Color.fromARGB(255, 40, 135, 125),
-                    foregroundColor: Colors.black,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(0))),
-                onPressed: () {},
-                child: Text('Send'),
-              ),
+              )
+              // const SizedBox(height: 16),
+              // TextFormField(
+              //   decoration: const InputDecoration(
+              //     fillColor: Colors.white,
+              //     filled: true,
+              //     labelText: 'Replay:',
+              //     border: OutlineInputBorder(),
+              //   ),
+              //   maxLines: 3,
+              // ),
+              // const SizedBox(height: 16),
+              // ElevatedButton(
+              //   style: ElevatedButton.styleFrom(
+              //       backgroundColor: const Color.fromARGB(255, 40, 135, 125),
+              //       foregroundColor: Colors.black,
+              //       shape: RoundedRectangleBorder(
+              //           borderRadius: BorderRadius.circular(0))),
+              //   onPressed: () {},
+              //   child: const Text('Send'),
+              // ),
             ],
           ),
         ),

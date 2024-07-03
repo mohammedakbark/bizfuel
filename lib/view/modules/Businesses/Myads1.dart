@@ -1,5 +1,6 @@
 import 'package:bizfuel/model/businesstypemodel.dart';
 import 'package:bizfuel/utils/string.dart';
+import 'package:bizfuel/view/modules/Businesses/edit_ad.dart';
 import 'package:bizfuel/view/modules/Businesses/myads2.dart';
 import 'package:bizfuel/viewmodel/firebasehelper.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -17,6 +18,7 @@ class Myads1 extends StatefulWidget {
 class _Myads1State extends State<Myads1> {
   @override
   Widget build(BuildContext context) {
+    // Provider.of<FirebaseHelper>(context, listen: false).clearads();
     return SafeArea(
       child: Scaffold(
           body: Container(
@@ -48,7 +50,7 @@ class _Myads1State extends State<Myads1> {
                 color: Colors.black,
               ),
               Padding(
-                padding: EdgeInsets.only(top: 30, left: 5, right: 5),
+                padding: const EdgeInsets.only(top: 30, left: 5, right: 5),
                 child: SizedBox(
                     height: 30,
                     child: SearchBar(
@@ -59,9 +61,9 @@ class _Myads1State extends State<Myads1> {
                         searcher.searchMyPost(searcher.postList, value);
                       },
                       hintText: "Products",
-                      hintStyle: MaterialStatePropertyAll(
+                      hintStyle: const MaterialStatePropertyAll(
                           TextStyle(color: Colors.black45, fontSize: 14)),
-                      leading: Icon(Icons.search),
+                      leading: const Icon(Icons.search),
                     )),
               ),
               const SizedBox(
@@ -74,7 +76,7 @@ class _Myads1State extends State<Myads1> {
                       return Helper.showIndicator();
                     }
                     if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-                      return Center(child: Text("No Post"));
+                      return const Center(child: Text("No Post"));
                     }
                     List<BusinesPost> listOfMyPost = [];
                     if (searcher.postList.isNotEmpty) {
@@ -89,7 +91,7 @@ class _Myads1State extends State<Myads1> {
                     return Expanded(
                       child: Center(
                         child: listOfMyPost.isEmpty
-                            ? Text("No Post Found")
+                            ? const Text("No Post Found")
                             : ListView.builder(
                                 itemCount: listOfMyPost.length,
                                 itemBuilder: (context, index) {
@@ -141,6 +143,40 @@ class _Myads1State extends State<Myads1> {
                                                   ],
                                                 ),
                                               ),
+                                              const Spacer(),
+                                              PopupMenuButton(
+                                                itemBuilder: (context) => [
+                                                  PopupMenuItem(
+                                                    onTap: () {
+                                                      Navigator.of(context).push(
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  EditMyAds(
+                                                                      post: listOfMyPost[
+                                                                          index])));
+                                                    },
+                                                    child: const Text(
+                                                      "Edit",
+                                                      style: TextStyle(
+                                                          color: Colors.blue),
+                                                    ),
+                                                  ),
+                                                  PopupMenuItem(
+                                                    onTap: () {
+                                                      FirebaseHelper()
+                                                          .deletemyad(
+                                                              listOfMyPost[
+                                                                      index]
+                                                                  .id);
+                                                    },
+                                                    child: const Text(
+                                                      "Delete",
+                                                      style: TextStyle(
+                                                          color: Colors.red),
+                                                    ),
+                                                  )
+                                                ],
+                                              )
                                             ],
                                           ),
                                         ),

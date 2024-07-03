@@ -1,6 +1,7 @@
 import 'package:bizfuel/view/modules/admin/adminviewbusiness.dart';
 import 'package:bizfuel/view/modules/admin/adminviewfeedbacks.dart';
 import 'package:bizfuel/view/modules/admin/adminviewresellers.dart';
+import 'package:bizfuel/view/modules/admin/widget.dart';
 import 'package:flutter/material.dart';
 
 class AdminHomePage extends StatefulWidget {
@@ -37,31 +38,7 @@ class _AdminHomePageState extends State<AdminHomePage> {
                         color: Colors.black,
                       ),
                     ),
-                    Row(
-                      children: [
-                        TextButton(
-                          onPressed: () {},
-                          child: const Text(
-                            'About Us',
-                            style: TextStyle(color: Colors.black),
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () {},
-                          child: const Text(
-                            'Contact Us',
-                            style: TextStyle(color: Colors.black),
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () {},
-                          child: const Text(
-                            'Logout',
-                            style: TextStyle(color: Colors.black),
-                          ),
-                        ),
-                      ],
-                    ),
+                    topAppBar(context)
                   ],
                 ),
               ),

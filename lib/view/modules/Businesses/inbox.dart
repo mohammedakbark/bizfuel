@@ -3,7 +3,9 @@ import 'dart:developer';
 import 'package:bizfuel/model/userregitrationmodel.dart';
 import 'package:bizfuel/utils/string.dart';
 import 'package:bizfuel/view/widgets/chat_page.dart';
+import 'package:bizfuel/view/widgets/cus_rating.dart';
 import 'package:bizfuel/viewmodel/firebasehelper.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -139,7 +141,8 @@ class _SheffeqState extends State<Sheffeq> {
                                         onTap: () => Navigator.of(context)
                                             .push(MaterialPageRoute(
                                                 builder: (context) => ChatPage(
-                                                  contactNumber:  list[index].contactNumber,
+                                                      contactNumber: list[index]
+                                                          .contactNumber,
                                                       anotherUserId:
                                                           list[index].id!,
                                                       anotherUserProfile:
@@ -161,7 +164,57 @@ class _SheffeqState extends State<Sheffeq> {
                                           list[index].qualification,
                                           style: const TextStyle(fontSize: 10),
                                         ),
-                                        trailing: const Icon(Icons.more_vert),
+                                        trailing: PopupMenuButton(
+                                          itemBuilder: (context) => [
+                                            PopupMenuItem(
+                                                onTap: () {
+                                                  showDialog(
+                                                      context: context,
+                                                      builder:
+                                                          (context) =>
+                                                              AlertDialog(
+                                                                actionsAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                actions: [
+                                                                  ElevatedButton(
+                                                                      onPressed:
+                                                                          () async {
+                                                                        FirebaseHelper()
+                                                                            .getSelectedReSellerProfile(list[index].uid)
+                                                                            .then((value) async {
+                                                                          final latestrate =
+                                                                              value.data()!["rating"];
+                                                                          await FirebaseFirestore
+                                                                              .instance
+                                                                              .collection("Usergegitration")
+                                                                              .doc(value.data()!["uid"])
+                                                                              .update({
+                                                                            "rating":
+                                                                                latestrate + Provider.of<FirebaseHelper>(context, listen: false).rating!.toDouble()
+                                                                          });
+                                                                          Navigator.of(context)
+                                                                              .pop();
+                                                                        });
+                                                                      },
+                                                                      child: const Text(
+                                                                          "Submit"))
+                                                                ],
+                                                                shape:
+                                                                    const ContinuousRectangleBorder(),
+                                                                // title:
+                                                                //     Text("Rate me"),
+                                                                content: CustomRating(
+                                                                    initalRating:
+                                                                        0,
+                                                                    size: 40,
+                                                                    isConst:
+                                                                        false),
+                                                              ));
+                                                },
+                                                child: const Text("Rate"))
+                                          ],
+                                        ),
                                       ),
                                     );
                                   },
